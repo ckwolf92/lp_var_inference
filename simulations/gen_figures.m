@@ -1,0 +1,131 @@
+%% LP vs VAR INFERENCE: GENERATE FIGURES
+% this version: 01/16/2024
+
+%% HOUSEKEEPING
+
+clc
+clear all
+close all
+
+warning('off','MATLAB:dispatcher:nameConflict')
+
+addpath('../auxiliary_functions')
+
+%% SETTINGS
+
+% DGP type
+dgp_type = 'ar1_quant'; % either 'ar1_simple', 'ar1_limit', or 'ar1_quant'
+
+% file names
+load_filename = fullfile('results', strcat('sim_', dgp_type, '.mat'));  % load results from this file
+save_suffix   = '.png'; % suffix for saved figures
+
+
+% select DGPs, CI procedures, and line specs
+switch dgp_type(5:9)
+    case 'simpl'
+        shares_sel = [0,0.1,0.25];
+        rhos_sel   = [0.5 0.7 0.9];
+        proc_names = {'AR', 'LP'};
+        procs = [1 1; % first index: inference procedure; second index: type of confidence interval
+                 2 1];
+        line_colors = [0 0 0; lines(7); 0.5 0.5 0.5];
+        line_specs = {'-o', '--o', ':o', '-.o', '-x', '--x', ':x', '-.x', '-s'};
+    case 'limit'
+        shares_sel = [0,0.1,0.25];
+        rhos_sel   = [0.7];
+        proc_names = {'AR', 'LP'};
+        procs = [1 1; % first index: inference procedure; second index: type of confidence interval
+                 2 1];
+        line_colors = [0 0 0; lines(7); 0.5 0.5 0.5];
+        line_specs = {'-o', '--o', ':o', '-.o', '-x', '--x', ':x', '-.x', '-s'};
+    case 'quant'
+        shares_sel = [0,0.1,0.25];
+        rhos_sel   = [0.7];
+        proc_names = {'AR', 'AR$_b$', 'LP', 'LP$_b$'};
+        procs = [1 1;
+                 1 2;
+                 2 1;
+                 2 4];
+        line_colors = [0 0 0; lines(7); 0.5 0.5 0.5];
+        line_colors = line_colors([1 3 2 4 5 6 7 8 9],:);
+        line_specs = {'-o', ':o', '--o', '-.o', '-x', '--x', ':x', '-.x', '-s'};
+end
+
+% axis limits
+ylim_cover = [0 1]; % y-limits for coverage prob plot
+yticks_length = -3:1:1; % y-ticks for median length plot (log10 scale)
+yticklabels_length = {'0.001', '0.01', '0.1', '1', '10'}; % y-tick labels for median length plot
+
+%% LOAD RESULTS
+
+load(load_filename);
+
+% pick out indices of selected DGPs
+numdgp_sel = length(shares_sel) * length(rhos_sel);
+dgp_sel = zeros(1,numdgp_sel);
+for i=1:length(rhos_sel)
+    for j=1:length(shares_sel)
+        dgp_indx = i + (j-1) * length(rhos_sel);
+        dgp_sel(dgp_indx) = find(dgp.dgps(1,:)==rhos_sel(i) & dgp.dgps(2,:)==shares_sel(j));
+    end
+end
+
+numproc = length(proc_names); % number of inference procedures
+
+%% GENERATE FIGURES
+
+status = mkdir('figures');
+save_filename = fullfile('figures', dgp_type); % first part of file name for saved figures
+
+numhorz = length(settings.est.horzs); % no. of estimated impulse response horizons
+
+for d=dgp_sel
+
+    the_f = figure;
+
+    % coverage probability
+    subplot(1,2,1);
+    set(gca,'TickLabelInterpreter','latex')
+    hold on;
+    for j=1:numproc
+        plot(1:numhorz, squeeze(results.coverage_prob(d,procs(j,1),:,procs(j,2))), line_specs{j}, 'Color', line_colors(j,:));
+    end
+    the_xlim = xlim;
+    plot(the_xlim, (1-settings.est.alpha)*[1 1], 'Color', 'k', 'LineStyle', ':'); % Nominal confidence level
+    hold off;
+    xlim(the_xlim);
+    xlabel('horizon','interpreter','latex');
+    xticklabels(settings.est.horzs);
+    ylim(ylim_cover);
+    title('coverage probability','interpreter','latex');
+
+    % median length
+    subplot(1,2,2);
+    set(gca,'TickLabelInterpreter','latex')
+    hold on;
+    for j=1:numproc
+        plot(1:numhorz, squeeze(log10(results.median_length(d,procs(j,1),:,procs(j,2)))), line_specs{j}, 'Color', line_colors(j,:));
+    end
+    hold off;
+    xlabel('horizon','interpreter','latex');
+    xticklabels(settings.est.horzs);
+    ylim([min(yticks_length) max(yticks_length)]);
+    yticks(yticks_length);
+    yticklabels(yticklabels_length);
+    title('median length, log scale','interpreter','latex');
+    legend(proc_names, 'Location', 'NorthEast','interpreter','latex');
+
+    % title
+    sgtitle(sprintf('%s %4.2f%s %4.2f%s', 'var. share = ', dgp.dgps(2,d), ', $\rho$ = ', dgp.dgps(1,d)),'interpreter','latex');
+
+    % size
+    pos = get(gcf, 'Position');
+    set(gcf, 'Position', [pos(1) pos(2) 1*pos(3) 0.56*pos(4)]);
+    set(gcf, 'PaperPositionMode', 'auto');
+    
+    % save
+    saveas(the_f,sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix));
+    close(the_f);
+
+end
