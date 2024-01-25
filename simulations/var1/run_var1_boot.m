@@ -27,6 +27,7 @@ dgp.tau        = 0.3; % cross effect
 dgp.zeta       = 1/3; % mis-specification dampening
 dgp.alpha_raw  = [0 0.6 0.4 0.25 0.1 -0.1 0.05]; % mis-specification MA, to be scaled later
 dgp.shares     = [0,0.1,0.25]; % targeted volatility share of mis-specification term
+dgp.Sigma_aux  = repmat({dgp.Sigma}, 1, length(dgp.alpha_raw)-1);
 
 % system size
 

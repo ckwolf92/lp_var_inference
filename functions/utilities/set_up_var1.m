@@ -17,7 +17,7 @@
     
     dgp.ABCD.A = zeros(dgp.n_s,dgp.n_s);
     dgp.ABCD.A(1:dgp.n_yp,1:dgp.n_yp) = dgp.A_c;
-    dgp.ABCD.A(1:dgp.n_y,dgp.n_yp+1:end) = dgp.Sigma * (dgp.T^(-dgp.zeta) .* dgp.alpha(:,dgp.n_y+1:end));
+    dgp.ABCD.A(1:dgp.n_y,dgp.n_yp+1:end) = (dgp.T^(-dgp.zeta) .* dgp.alpha(:,dgp.n_y+1:end)) * blkdiag(dgp.Sigma_aux{:});
     dgp.ABCD.A(dgp.n_yp+dgp.n_y+1:dgp.n_s,dgp.n_yp+1:dgp.n_s-dgp.n_y) = eye(dgp.n_s-dgp.n_yp-dgp.n_y);
     
     dgp.ABCD.B = zeros(dgp.n_s,dgp.n_eps);
