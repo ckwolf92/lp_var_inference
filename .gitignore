@@ -1,6 +1,8 @@
 *.asv
 *.log
 *.mat
+*.png
+*.tex
 simulations/ar1/results/*.*
 simulations/ar1/figures/*.*
 simulations/ar1/tables/*.*
