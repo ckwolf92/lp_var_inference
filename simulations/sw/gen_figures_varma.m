@@ -12,41 +12,38 @@ warning('off','MATLAB:dispatcher:nameConflict')
 %% SETTINGS
 
 % DGP type
-dgp_type = 'var1_boot'; % either 'var1_delta', 'var1_limit', or 'var1_boot'
+dgp_type = 'varma_estp'; % either 'varma_fixp', 'varma_estp', or 'varma_worst'
 
 % file names
 load_filename = fullfile('results', strcat('sim_', dgp_type, '.mat'));  % load results from this file
 save_suffix   = '.png'; % suffix for saved figures
 
 % select DGPs, CI procedures, and line specs
-switch dgp_type(6:9)
-    case 'delt'
-        shares_sel = [0,0.1,0.25];
-        rhos_sel   = [0.5 0.7 0.9];
-        proc_names = {'VAR', 'LP'};
+switch dgp_type(7)
+    case 'f'
+        p_sel = [1,2,4];
+        rhos_sel   = [0.9];
+        proc_names = {'AR', 'LP'};
         procs = [1 1; % first index: inference procedure; second index: type of confidence interval
                  2 1];
         line_colors = [0 0 0; lines(7); 0.5 0.5 0.5];
         line_specs = {'-o', '--o', ':o', '-.o', '-x', '--x', ':x', '-.x', '-s'};
-    case 'limi'
-        shares_sel = [0,0.1,0.25];
-        rhos_sel   = [0.7];
-        proc_names = {'VAR', 'LP'};
+    case 'e'
+        p_sel = [1];
+        rhos_sel   = [0.9];
+        proc_names = {'AR', 'LP'};
         procs = [1 1; % first index: inference procedure; second index: type of confidence interval
                  2 1];
         line_colors = [0 0 0; lines(7); 0.5 0.5 0.5];
         line_specs = {'-o', '--o', ':o', '-.o', '-x', '--x', ':x', '-.x', '-s'};
-    case 'boot'
-        shares_sel = [0,0.1,0.25];
-        rhos_sel   = [0.7];
-        proc_names = {'VAR', 'VAR$_b$', 'LP', 'LP$_b$'};
-        procs = [1 1;
-                 1 2;
-                 2 1;
-                 2 4];
+    case 'w'
+        p_sel = [1];
+        rhos_sel   = [0.9];
+        proc_names = {'AR', 'LP'};
+        procs = [1 1; % first index: inference procedure; second index: type of confidence interval
+                 2 1];
         line_colors = [0 0 0; lines(7); 0.5 0.5 0.5];
-        line_colors = line_colors([1 3 2 4 5 6 7 8 9],:);
-        line_specs = {'-o', ':o', '--o', '-.o', '-x', '--x', ':x', '-.x', '-s'};
+        line_specs = {'-o', '--o', ':o', '-.o', '-x', '--x', ':x', '-.x', '-s'};
 end
 
 % axis limits
@@ -59,13 +56,10 @@ yticklabels_length = {'0.001', '0.01', '0.1', '1', '10'}; % y-tick labels for me
 load(load_filename);
 
 % pick out indices of selected DGPs
-numdgp_sel = length(shares_sel) * length(rhos_sel);
+numdgp_sel = length(p_sel);
 dgp_sel = zeros(1,numdgp_sel);
-for i=1:length(rhos_sel)
-    for j=1:length(shares_sel)
-        dgp_indx = i + (j-1) * length(rhos_sel);
-        dgp_sel(dgp_indx) = find(dgp.dgps(1,:)==rhos_sel(i) & dgp.dgps(2,:)==shares_sel(j));
-    end
+for i=1:length(p_sel)
+    dgp_sel(i) = find(dgp.dgps(1,:)==p_sel(i));
 end
 
 numproc = length(proc_names); % number of inference procedures
@@ -110,10 +104,15 @@ for d=dgp_sel
     yticks(yticks_length);
     yticklabels(yticklabels_length);
     title('median length, log scale','interpreter','latex');
-    legend(proc_names, 'Location', 'NorthEast','interpreter','latex');
+    legend(proc_names, 'Location', 'SouthEast','interpreter','latex');
 
     % title
-    sgtitle(sprintf('%s %4.2f%s %4.2f%s', 'var. share = ', dgp.dgps(2,d), ', $\rho$ = ', dgp.dgps(1,d)),'interpreter','latex');
+    if dgp_type(7) == 'f'
+%         sgtitle(sprintf('%s %4.2f%s %4.2f%s', '$p$ = ', dgp.dgps(1,d)),'interpreter','latex');
+        sgtitle(sprintf('%s %4.0f%s %4.0f%s', '$p$ = ', dgp.dgps(1,d)),'interpreter','latex');
+    else
+        sgtitle(sprintf('%s %4.2f%s %4.2f%s', '$p$ = AIC'),'interpreter','latex');
+    end
 
     % size
     pos = get(gcf, 'Position');

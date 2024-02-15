@@ -23,7 +23,7 @@ function [irs, irs_varcov, Ahat_estim, Sigmahat_estim, res_estim] ...
     
     % One-step forecasting regression of Y_{t+1} on (Y_t, ..., Y_{t-p+1})
     [Ahat_estim, Ahat_estim_varcov, Sigmahat_estim, Sigmahat_estim_varcov, res_estim] ...
-        = var(Y, p, homosk, no_const);
+        = var_estim(Y, p, homosk, no_const);
     
     % Bias correction, if desired
     if bias_corr

@@ -1,5 +1,5 @@
 function [betahat, betahat_varcov, Sigmahat, Sigmahat_varcov, res] ...
-            = var(Y, num_lags, se_setting, no_const)
+            = var_estim(Y, num_lags, se_setting, no_const)
 
     % Reduced-form Vector Autoregression
     

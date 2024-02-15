@@ -27,12 +27,14 @@ function IRF = compute_irfs(dgp, settings)
     D = dgp.ABCD.D;
 
     % define shock
+
+    aux_mat = dgp.H * sqrt(dgp.D);
     
     if n_y == 1
-        shock_weight = 1/dgp.Sigma;
+        shock_weight = 1/aux_mat;
     else
         shock_weight = zeros(n_y,1);
-        shock_weight(settings.est.innov_ind,1) = 1/dgp.Sigma(settings.est.innov_ind,settings.est.innov_ind);
+        shock_weight(settings.est.innov_ind,1) = 1/aux_mat(settings.est.innov_ind,settings.est.innov_ind);
     end
     
     % compute IRFs of all observables

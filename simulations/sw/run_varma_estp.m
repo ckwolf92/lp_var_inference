@@ -13,32 +13,21 @@ addpath(genpath('../../functions'))
 
 %% DATA-GENERATING PROCESS (DGP)
 
+load('inputs/varma_sw_dgps')
+
 dgp = struct;
 
 % parameters
 
-dgp.rhos       = [0.5 0.7 0.9]; % AR parameter
-dgp.a          = 0.35; % AR parameter
-dgp.p          = 1; % lags
-dgp.T          = 240; % sample size
-dgp.T_scale    = 240; % artificial sample size to scale mis-specification
-dgp.Sigma      = [2,0;0,3]; % shock volatility
-dgp.tau        = 0.3; % cross effect
-dgp.zeta       = 1/3; % mis-specification dampening
-dgp.alpha_raw  = [0 0.6 0.4 0.25 0.1 -0.1 0.05]; % mis-specification MA, to be scaled later
-dgp.shares     = [0,0.1,0.25]; % targeted volatility share of mis-specification term
-dgp.Sigma_aux  = repmat({dgp.Sigma}, 1, length(dgp.alpha_raw)-1);
+dgp.ps         = dgp_settings.ps(1); % lags
+dgp.T          = 240;  % sample size
+dgp.T_scale    = dgp_settings.T; % artificial sample size to scale mis-specification
+dgp.zeta       = dgp_settings.zeta; % mis-specification dampening
 
 % system size
 
-dgp.n_y   = 2;
+dgp.n_y   = 3;
 dgp.n_eps = dgp.n_y;
-dgp.n_yp  = dgp.n_y * dgp.p;
-dgp.n_s   = dgp.n_y * dgp.p + (dgp.n_y * size(dgp.alpha_raw,2)-dgp.n_eps);
-
-% system matrices
-
-dgp.H   = [1, 0; dgp.tau, 1];
 
 %% SETTINGS
 
@@ -48,7 +37,7 @@ settings = struct;
 % Monte Carlo Simulation
 %----------------------------------------------------------------
 
-settings.sim.numrep      = 5e3; % no. of repetitions
+settings.sim.numrep      = 2e3; % no. of repetitions
 settings.sim.rng_seed    = 202007252; % random number seed
 settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
 
@@ -56,16 +45,19 @@ settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
 % Estimation
 %----------------------------------------------------------------
 
-settings.est.type = 'delta'; % estimation methods type
+settings.est.type = 'estp'; % estimation methods type
 
-settings.est.p         = dgp.p; % lag length used for estimation
+settings.est.ps        = dgp.ps; % lag length used for estimation
 settings.est.horzs     = [1:1:16]; % horizons of interest
 settings.est.no_const  = true; % true: omit intercept
 settings.est.se_homosk = true; % true: homoskedastic ses
 settings.est.alpha     = 0.1; % significance level
 
-settings.est.resp_ind  = 2; % index of response variable of interest
-settings.est.innov_ind = 1; % index of innovation of interest
+settings.est.p_select  = 1; % use information criterion to select lag length? (1 for AIC, 2 for BIC)
+settings.p_max         = 10; % maximal lag length to consider
+
+settings.est.resp_ind  = 1; % index of response variable of interest
+settings.est.innov_ind = 3; % index of innovation of interest
 
 settings.est.boot      = false; % true: bootstrap
 settings.est.boot_num  = 1e2;  % number of bootstrap samples
@@ -96,10 +88,7 @@ end
 
 rng(settings.sim.rng_seed, 'twister'); % set RNG seed
 
-aux1  = repmat(dgp.rhos,size(dgp.shares));
-aux2  = repmat(dgp.shares',size(dgp.rhos))';
-dgps  = [aux1;reshape(aux2,[1,size(aux1,2)])];
-clear aux1 aux2
+dgps = dgp.ps;
 
 numdgp  = size(dgps,2);                 % no. of DGPs
 numhorz = length(settings.est.horzs);   % no. of horizons
@@ -127,6 +116,8 @@ ses    = estims;
 cis_lower = zeros(numdgp, numspec, numhorz, 4, numrep);
 cis_upper = cis_lower;
 
+ps = zeros(numdgp, numrep);
+
 %----------------------------------------------------------------
 % Start Parallel Workers
 %----------------------------------------------------------------
@@ -145,22 +136,24 @@ for i_dgp = 1:numdgp
     
     % set up DGP
 
-    dgp.rho   = dgps(1,i_dgp);
-    dgp.share = dgps(2,i_dgp);
+    indx_p   = find(dgp_settings.ps == dgps(1,i_dgp));
 
-    aux_coef             = poly(repmat(1/dgp.a,1,dgp.p)); % coef's of polynomial (1/a-x)^p
-    dgp.A_lower          = [dgp.a zeros(1,2*dgp.p-1)];
-    dgp.A_lower(2:2:end) = -aux_coef(end-1:-1:1)/aux_coef(end);
-    clear aux_coef
-    dgp.A = [dgp.rho zeros(1,dgp.n_y*dgp.p-1);
-             dgp.A_lower];
-    clear dgp.A_lower
-    dgp.A_c = A_c_fn(dgp.A);
+    dgp.p           = dgp.ps(i_dgp);
+    dgp.n_yp        = dgp.n_y * dgp.p;
 
-    dgp.scale = sqrt(dgp.share/(1-dgp.share) * 1./(dgp.T_scale.^(-2*dgp.zeta) .* sum(dgp.alpha_raw.^2)));
-    dgp.alpha = dgp.scale * kron(dgp.alpha_raw,eye(dgp.n_y));
+    dgp.A           = dgp_inputs{indx_p}.A;
+    dgp.A_c         = dgp_inputs{indx_p}.A_c;
+    dgp.H           = dgp_inputs{indx_p}.H;
+    dgp.H_c         = dgp_inputs{indx_p}.H_c;
+    dgp.D           = dgp_inputs{indx_p}.D;
+    dgp.Sigma       = dgp_inputs{indx_p}.Sigma;
+    dgp.alpha_tilde = dgp_inputs{indx_p}.alpha_tilde;
+
+    dgp.alpha_tilde(2:end,:,:) = dgp.T_scale^(dgp.zeta) * dgp.alpha_tilde(2:end,:,:);
+
+    dgp.n_s         = dgp.n_y * dgp.p + (dgp.n_y * size(dgp.alpha_tilde,1)-dgp.n_eps);
     
-    set_up_var1
+    set_up_varma
     
     % seed
     
@@ -177,6 +170,11 @@ for i_dgp = 1:numdgp
         % simulate data
         
         data_y = generate_data(dgp);
+        if settings.est.p_select == 0
+            p = dgp.p;
+        else
+            p = ic_var(data_y,settings.p_max,settings.est.p_select);
+        end
         
         % placeholders
         
@@ -190,7 +188,7 @@ for i_dgp = 1:numdgp
         for i_spec = 1:numspec
         
             [i_rep_estims(i_spec,:),i_rep_ses(i_spec,:),i_cis_dm,i_cis_boot] ...
-                = ir_estim(data_y, settings.est.p, settings.est.horzs, spec_shared{:}, specs{i_spec}{:});
+                = ir_estim(data_y, p, settings.est.horzs, spec_shared{:}, specs{i_spec}{:});
             
             i_rep_cis_lower(i_spec,:,1) = i_cis_dm(1,:);
             i_rep_cis_upper(i_spec,:,1) = i_cis_dm(2,:);
@@ -206,6 +204,7 @@ for i_dgp = 1:numdgp
         ses(i_dgp,:,:,i_rep) = i_rep_ses;
         cis_lower(i_dgp,:,:,:,i_rep) = i_rep_cis_lower;
         cis_upper(i_dgp,:,:,:,i_rep) = i_rep_cis_upper;
+        ps(i_dgp,i_rep) = p;
         
         if mod(i_rep, ceil(numrep/10)) == 0
             fprintf('%6d%s\n', round(i_rep/numrep*100), '%');
@@ -235,8 +234,9 @@ results.estims    = estims;
 results.ses       = ses;
 results.cis_lower = cis_lower;
 results.cis_upper = cis_upper;
+results.ps        = ps;
 
-clear estims ses cis_lower cis_upper
+clear estims ses cis_lower cis_upper ps
 
 %----------------------------------------------------------------
 % Post-Computations
@@ -260,5 +260,5 @@ results.median_length = median(results.lengths,5);
 
 %% SAVE RESULTS
 
-results_filename = sprintf('%s%s', 'sim_var1_', settings.est.type);
+results_filename = sprintf('%s%s', 'sim_varma_', settings.est.type);
 save(strcat('results/',results_filename, '.mat'), 'dgp', 'specs', 'settings', 'results');

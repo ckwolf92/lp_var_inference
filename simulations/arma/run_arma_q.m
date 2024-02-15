@@ -1,5 +1,5 @@
 %% LP vs VAR INFERENCE: SIMULATIONS
-% this version: 01/24/2024
+% this version: 02/14/2024
 
 %% HOUSEKEEPING
 
@@ -11,34 +11,27 @@ warning('off','MATLAB:dispatcher:nameConflict')
 
 addpath(genpath('../../functions'))
 
-%% DATA-GENERATING PROCESS (DGP)
+%% DATA-GENERATING PROCESSES (DGPs)
+
+load('inputs/arma_dgps')
 
 dgp = struct;
 
 % parameters
 
-dgp.rhos       = [0.7]; % AR parameter
-dgp.a          = 0.35; % AR parameter
-dgp.p          = 1; % lags
-dgp.T          = 1e5; % sample size
-dgp.T_scale    = 240; % artificial sample size to scale mis-specification
-dgp.Sigma      = [2,0;0,3]; % shock volatility
-dgp.tau        = 0.3; % cross effect
-dgp.zeta       = 1/3; % mis-specification dampening
-dgp.alpha_raw  = [0 0.6 0.4 0.25 0.1 -0.1 0.05]; % mis-specification MA, to be scaled later
-dgp.shares     = [0,0.1,0.25]; % targeted volatility share of mis-specification term
-dgp.Sigma_aux  = repmat({dgp.Sigma}, 1, length(dgp.alpha_raw)-1);
+dgp.rhos       = dgp_settings.rhos; % AR parameters
+dgp.p          = dgp_settings.VAR_estimlaglength; % lags
+dgp.T          = 240;  % sample size
+dgp.T_scale    = dgp_settings.T; % artificial sample size to scale mis-specification
+dgp.zeta       = dgp_settings.zeta; % mis-specification dampening
+dgp.thetas     = dgp_settings.thetas(1:2); % MA term
 
 % system size
 
-dgp.n_y   = 2;
-dgp.n_eps = dgp.n_y;
+dgp.n_y   = 1;
 dgp.n_yp  = dgp.n_y * dgp.p;
-dgp.n_s   = dgp.n_y * dgp.p + (dgp.n_y * size(dgp.alpha_raw,2)-dgp.n_eps);
-
-% system matrices
-
-dgp.H   = [1, 0; dgp.tau, 1];
+dgp.n_eps = dgp.n_y;
+dgp.n_s   = dgp.n_yp + dgp.n_y * dgp_settings.alpha_lags;
 
 %% SETTINGS
 
@@ -48,7 +41,7 @@ settings = struct;
 % Monte Carlo Simulation
 %----------------------------------------------------------------
 
-settings.sim.numrep      = 5e3; % no. of repetitions
+settings.sim.numrep      = 2e4; % no. of repetitions
 settings.sim.rng_seed    = 202007252; % random number seed
 settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
 
@@ -56,15 +49,15 @@ settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
 % Estimation
 %----------------------------------------------------------------
 
-settings.est.type = 'limit'; % estimation methods type
+settings.est.type = 'quarterly'; % estimation methods type
 
-settings.est.p         = dgp.p; % lag length used for estimation
-settings.est.horzs     = [1:1:16]; % horizons of interest
+settings.est.p         = 1; % lag length used for estimation
+settings.est.horzs     = [1:1:4]; % horizons of interest
 settings.est.no_const  = true; % true: omit intercept
 settings.est.se_homosk = true; % true: homoskedastic ses
 settings.est.alpha     = 0.1; % significance level
 
-settings.est.resp_ind  = 2; % index of response variable of interest
+settings.est.resp_ind  = 1; % index of response variable of interest
 settings.est.innov_ind = 1; % index of innovation of interest
 
 settings.est.boot      = false; % true: bootstrap
@@ -96,8 +89,8 @@ end
 
 rng(settings.sim.rng_seed, 'twister'); % set RNG seed
 
-aux1  = repmat(dgp.rhos,size(dgp.shares));
-aux2  = repmat(dgp.shares',size(dgp.rhos))';
+aux1  = repmat(dgp.rhos,size(dgp.thetas));
+aux2  = repmat(dgp.thetas',size(dgp.rhos))';
 dgps  = [aux1;reshape(aux2,[1,size(aux1,2)])];
 clear aux1 aux2
 
@@ -106,14 +99,11 @@ numhorz = length(settings.est.horzs);   % no. of horizons
 numspec = length(specs);                % no. of regression specifications
 numrep  = settings.sim.numrep;          % no. of repetitions
 
-spec_shared = {'resp_ind', settings.est.resp_ind, ...
-               'innov_ind', settings.est.innov_ind, ...
-               'alpha', settings.est.alpha,...
+spec_shared = {'alpha', settings.est.alpha,...
                'no_const', settings.est.no_const,...
-               'se_homosk', settings.est.se_homosk,...
-               'boot_num', settings.est.boot_num};
+               'se_homosk', settings.est.se_homosk};
 
-dgp.irs_true = nan(numdgp, numhorz);
+dgp.irs_true = nan(numdgp,numhorz);
 
 %% RUN SIMULATIONS
 
@@ -145,22 +135,20 @@ for i_dgp = 1:numdgp
     
     % set up DGP
 
-    dgp.rho   = dgps(1,i_dgp);
-    dgp.share = dgps(2,i_dgp);
+    indx_rho   = find(dgp_settings.rhos == dgps(1,i_dgp));
+    indx_theta = find(dgp_settings.thetas == dgps(2,i_dgp));
 
-    aux_coef             = poly(repmat(1/dgp.a,1,dgp.p)); % coef's of polynomial (1/a-x)^p
-    dgp.A_lower          = [dgp.a zeros(1,2*dgp.p-1)];
-    dgp.A_lower(2:2:end) = -aux_coef(end-1:-1:1)/aux_coef(end);
-    clear aux_coef
-    dgp.A = [dgp.rho zeros(1,dgp.n_y*dgp.p-1);
-             dgp.A_lower];
-    clear dgp.A_lower
-    dgp.A_c = A_c_fn(dgp.A);
+    dgp.A           = dgp_inputs{indx_rho,indx_theta}.A;
+    dgp.A_c         = dgp_inputs{indx_rho,indx_theta}.A_c;
+    dgp.H           = dgp_inputs{indx_rho,indx_theta}.H;
+    dgp.H_c         = dgp_inputs{indx_rho,indx_theta}.H_c;
+    dgp.D           = dgp_inputs{indx_rho,indx_theta}.D;
+    dgp.Sigma       = dgp_inputs{indx_rho,indx_theta}.Sigma;
+    dgp.alpha_tilde = dgp_inputs{indx_rho,indx_theta}.alpha_tilde;
 
-    dgp.scale = sqrt(dgp.share/(1-dgp.share) * 1./(dgp.T_scale.^(-2*dgp.zeta) .* sum(dgp.alpha_raw.^2)));
-    dgp.alpha = dgp.scale * kron(dgp.alpha_raw,eye(dgp.n_y));
+    dgp.alpha_tilde(2:end) = dgp.T_scale^(dgp.zeta) * dgp.alpha_tilde(2:end);
     
-    set_up_var1
+    set_up_varma
     
     % seed
     
@@ -260,5 +248,5 @@ results.median_length = median(results.lengths,5);
 
 %% SAVE RESULTS
 
-results_filename = sprintf('%s%s', 'sim_var1_', settings.est.type);
+results_filename = sprintf('%s%s', 'sim_arma_', settings.est.type);
 save(strcat('results/',results_filename, '.mat'), 'dgp', 'specs', 'settings', 'results');
