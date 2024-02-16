@@ -12,32 +12,32 @@ warning('off','MATLAB:dispatcher:nameConflict')
 %% SETTINGS
 
 % DGP type
-dgp_type = 'arma_limit'; % either 'arma_quarterly', 'arma_monthly', or 'arma_limit'
+dgp_type = 'varma_worst'; % either 'varma_fixp', 'varma_estp', or 'varma_worst'
 
 % file names
 load_filename = fullfile('results', strcat('sim_', dgp_type, '.mat'));  % load results from this file
 save_suffix   = '.png'; % suffix for saved figures
 
 % select DGPs, CI procedures, and line specs
-switch dgp_type(6)
-    case 'q'
-        thetas_sel = [0,0.25];
+switch dgp_type(7)
+    case 'f'
+        p_sel = [1,2,4,8];
         rhos_sel   = [0.9];
         proc_names = {'AR', 'LP'};
         procs = [1 1; % first index: inference procedure; second index: type of confidence interval
                  2 1];
         line_colors = [204/255 0/255 0/255; 102/255 178/255 255/255];
         line_specs = {'-', '-.'};
-    case 'm'
-        thetas_sel = [0,0.25];
+    case 'e'
+        p_sel = [1];
         rhos_sel   = [0.9];
         proc_names = {'AR', 'LP'};
         procs = [1 1; % first index: inference procedure; second index: type of confidence interval
                  2 1];
         line_colors = [204/255 0/255 0/255; 102/255 178/255 255/255];
         line_specs = {'-', '-.'};
-    case 'l'
-        thetas_sel = [0.5];
+    case 'w'
+        p_sel = [1];
         rhos_sel   = [0.9];
         proc_names = {'AR', 'LP'};
         procs = [1 1; % first index: inference procedure; second index: type of confidence interval
@@ -56,13 +56,10 @@ yticklabels_length = {'0.001', '0.01', '0.1', '1', '10'}; % y-tick labels for me
 load(load_filename);
 
 % pick out indices of selected DGPs
-numdgp_sel = length(thetas_sel) * length(rhos_sel);
+numdgp_sel = length(p_sel);
 dgp_sel = zeros(1,numdgp_sel);
-for i=1:length(rhos_sel)
-    for j=1:length(thetas_sel)
-        dgp_indx = i + (j-1) * length(rhos_sel);
-        dgp_sel(dgp_indx) = find(dgp.dgps(1,:)==rhos_sel(i) & dgp.dgps(2,:)==thetas_sel(j));
-    end
+for i=1:length(p_sel)
+    dgp_sel(i) = find(dgp.dgps(1,:)==p_sel(i));
 end
 
 numproc = length(proc_names); % number of inference procedures
