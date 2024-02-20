@@ -12,7 +12,7 @@ warning('off','MATLAB:dispatcher:nameConflict')
 %% SETTINGS
 
 % DGP type
-dgp_type = 'arma_boot'; % either 'arma_delta', 'arma_boot', or 'arma_limit'
+dgp_type = 'arma_limit'; % either 'arma_delta', 'arma_boot', or 'arma_limit'
 
 % file names
 load_filename = fullfile('results', strcat('sim_', dgp_type, '.mat'));  % load results from this file
@@ -38,15 +38,16 @@ switch dgp_type(6)
                  2 4];
         line_colors = [204/255 0/255 0/255; 0.5 * [1 1 1] + 0.5 * [204/255 0/255 0/255]; ...
             102/255 178/255 255/255; 0.5 * [1 1 1] + 0.5 * [102/255 178/255 255/255]];
+        % line_colors = [0 0 0; lines(7); 0.5 0.5 0.5];
+        % line_colors = line_colors([1 3 2 4 5 6 7 8 9],:);
         line_specs = {'-', '-.', ':', '--'};
     case 'l'
         thetas_sel = [0.5];
         rhos_sel   = [0.9];
-        proc_names = {'AR', 'LP'};
-        procs = [1 1; % first index: inference procedure; second index: type of confidence interval
-                 2 1];
-        line_colors = [204/255 0/255 0/255; 102/255 178/255 255/255];
-        line_specs = {'-', '-.'};
+        proc_names = {'LP'};
+        procs = [2 1]; % first index: inference procedure; second index: type of confidence interval
+        line_colors = [102/255 178/255 255/255];
+        line_specs = {'-.'};
 end
 
 % axis limits
@@ -144,7 +145,7 @@ for d=dgp_sel
     set(gcf, 'PaperPositionMode', 'auto');
     
     % save
-    saveas(the_f,sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix));
+    saveas(the_f,sprintf('%s%s%d%s%d%s', save_filename, '_dgp0', d, save_suffix));
     close(the_f);
 
 end

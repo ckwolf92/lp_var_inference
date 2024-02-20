@@ -1,5 +1,5 @@
 %% LP vs VAR INFERENCE: SIMULATIONS
-% this version: 02/14/2024
+% this version: 01/24/2024
 
 %% HOUSEKEEPING
 
@@ -11,27 +11,23 @@ warning('off','MATLAB:dispatcher:nameConflict')
 
 addpath(genpath('../../functions'))
 
-%% DATA-GENERATING PROCESSES (DGPs)
+%% DATA-GENERATING PROCESS (DGP)
 
-load('inputs/arma_dgps')
+load('inputs/varma_sw_dgps')
 
 dgp = struct;
 
 % parameters
 
-dgp.rhos       = dgp_settings.rhos; % AR parameters
-dgp.p          = dgp_settings.VAR_estimlaglength; % lags
+dgp.ps         = dgp_settings.ps; % lags
 dgp.T          = 240;  % sample size
 dgp.T_scale    = dgp_settings.T; % artificial sample size to scale mis-specification
 dgp.zeta       = dgp_settings.zeta; % mis-specification dampening
-dgp.thetas     = dgp_settings.thetas(1:2); % MA term
 
 % system size
 
-dgp.n_y   = 1;
-dgp.n_yp  = dgp.n_y * dgp.p;
+dgp.n_y   = 3;
 dgp.n_eps = dgp.n_y;
-dgp.n_s   = dgp.n_yp + dgp.n_y * dgp_settings.alpha_lags;
 
 %% SETTINGS
 
@@ -41,7 +37,7 @@ settings = struct;
 % Monte Carlo Simulation
 %----------------------------------------------------------------
 
-settings.sim.numrep      = 2e4; % no. of repetitions
+settings.sim.numrep      = 1e3; % no. of repetitions
 settings.sim.rng_seed    = 202007252; % random number seed
 settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
 
@@ -49,19 +45,19 @@ settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
 % Estimation
 %----------------------------------------------------------------
 
-settings.est.type = 'quarterly'; % estimation methods type
+settings.est.type = 'bfixp'; % estimation methods type
 
-settings.est.p         = 1; % lag length used for estimation
-settings.est.horzs     = [1:1:4]; % horizons of interest
+settings.est.ps        = dgp.ps; % lag length used for estimation
+settings.est.horzs     = [1:1:16]; % horizons of interest
 settings.est.no_const  = true; % true: omit intercept
 settings.est.se_homosk = true; % true: homoskedastic ses
 settings.est.alpha     = 0.1; % significance level
 
 settings.est.resp_ind  = 1; % index of response variable of interest
-settings.est.innov_ind = 1; % index of innovation of interest
+settings.est.innov_ind = 3; % index of innovation of interest
 
-settings.est.boot      = false; % true: bootstrap
-settings.est.boot_num  = 1e2;  % number of bootstrap samples
+settings.est.boot      = true; % true: bootstrap
+settings.est.boot_num  = 5e2;  % number of bootstrap samples
 
 %% SPECIFICATIONS
 
@@ -89,21 +85,21 @@ end
 
 rng(settings.sim.rng_seed, 'twister'); % set RNG seed
 
-aux1  = repmat(dgp.rhos,size(dgp.thetas));
-aux2  = repmat(dgp.thetas',size(dgp.rhos))';
-dgps  = [aux1;reshape(aux2,[1,size(aux1,2)])];
-clear aux1 aux2
+dgps = dgp.ps;
 
 numdgp  = size(dgps,2);                 % no. of DGPs
 numhorz = length(settings.est.horzs);   % no. of horizons
 numspec = length(specs);                % no. of regression specifications
 numrep  = settings.sim.numrep;          % no. of repetitions
 
-spec_shared = {'alpha', settings.est.alpha,...
+spec_shared = {'resp_ind', settings.est.resp_ind, ...
+               'innov_ind', settings.est.innov_ind, ...
+               'alpha', settings.est.alpha,...
                'no_const', settings.est.no_const,...
-               'se_homosk', settings.est.se_homosk};
+               'se_homosk', settings.est.se_homosk,...
+               'boot_num', settings.est.boot_num};
 
-dgp.irs_true = nan(numdgp,numhorz);
+dgp.irs_true = nan(numdgp, numhorz);
 
 %% RUN SIMULATIONS
 
@@ -135,18 +131,24 @@ for i_dgp = 1:numdgp
     
     % set up DGP
 
-    indx_rho   = find(dgp_settings.rhos == dgps(1,i_dgp));
-    indx_theta = find(dgp_settings.thetas == dgps(2,i_dgp));
+    indx_p   = find(dgp_settings.ps == dgps(1,i_dgp));
 
-    dgp.A           = dgp_inputs{indx_rho,indx_theta}.A;
-    dgp.A_c         = dgp_inputs{indx_rho,indx_theta}.A_c;
-    dgp.H           = dgp_inputs{indx_rho,indx_theta}.H;
-    dgp.H_c         = dgp_inputs{indx_rho,indx_theta}.H_c;
-    dgp.D           = dgp_inputs{indx_rho,indx_theta}.D;
-    dgp.Sigma       = dgp_inputs{indx_rho,indx_theta}.Sigma;
-    dgp.alpha_tilde = dgp_inputs{indx_rho,indx_theta}.alpha_tilde;
+    dgp.p           = dgp.ps(i_dgp);
+    dgp.n_yp        = dgp.n_y * dgp.p;
 
-    dgp.alpha_tilde(2:end) = dgp.T_scale^(dgp.zeta) * dgp.alpha_tilde(2:end);
+    settings.est.p  = dgp.p;
+
+    dgp.A           = dgp_inputs{indx_p}.A;
+    dgp.A_c         = dgp_inputs{indx_p}.A_c;
+    dgp.H           = dgp_inputs{indx_p}.H;
+    dgp.H_c         = dgp_inputs{indx_p}.H_c;
+    dgp.D           = dgp_inputs{indx_p}.D;
+    dgp.Sigma       = dgp_inputs{indx_p}.Sigma;
+    dgp.alpha_tilde = dgp_inputs{indx_p}.alpha_tilde;
+
+    dgp.alpha_tilde(2:end,:,:) = dgp.T_scale^(dgp.zeta) * dgp.alpha_tilde(2:end,:,:);
+
+    dgp.n_s         = dgp.n_y * dgp.p + (dgp.n_y * size(dgp.alpha_tilde,1)-dgp.n_eps);
     
     set_up_varma
     
@@ -248,5 +250,5 @@ results.median_length = median(results.lengths,5);
 
 %% SAVE RESULTS
 
-results_filename = sprintf('%s%s', 'sim_arma_', settings.est.type);
+results_filename = sprintf('%s%s', 'sim_varma_', settings.est.type);
 save(strcat('results/',results_filename, '.mat'), 'dgp', 'specs', 'settings', 'results');

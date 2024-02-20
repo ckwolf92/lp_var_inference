@@ -21,10 +21,10 @@ dgp = struct;
 
 dgp.rhos       = dgp_settings.rhos; % AR parameters
 dgp.p          = dgp_settings.VAR_estimlaglength; % lags
-dgp.T          = 3e4;  % sample size
+dgp.T          = 240;  % sample size
 dgp.T_scale    = dgp_settings.T; % artificial sample size to scale mis-specification
 dgp.zeta       = dgp_settings.zeta; % mis-specification dampening
-dgp.thetas     = dgp_settings.thetas(3); % MA term
+dgp.thetas     = dgp_settings.thetas(1:2); % MA term
 
 % system size
 
@@ -41,7 +41,7 @@ settings = struct;
 % Monte Carlo Simulation
 %----------------------------------------------------------------
 
-settings.sim.numrep      = 3e4; % no. of repetitions
+settings.sim.numrep      = 1e3; % no. of repetitions
 settings.sim.rng_seed    = 202007252; % random number seed
 settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
 
@@ -49,7 +49,7 @@ settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
 % Estimation
 %----------------------------------------------------------------
 
-settings.est.type = 'limit'; % estimation methods type
+settings.est.type = 'boot'; % estimation methods type
 
 settings.est.p         = 1; % lag length used for estimation
 settings.est.horzs     = [1:1:6]; % horizons of interest
@@ -60,8 +60,8 @@ settings.est.alpha     = 0.1; % significance level
 settings.est.resp_ind  = 1; % index of response variable of interest
 settings.est.innov_ind = 1; % index of innovation of interest
 
-settings.est.boot      = false; % true: bootstrap
-settings.est.boot_num  = 1e2;  % number of bootstrap samples
+settings.est.boot      = true; % true: bootstrap
+settings.est.boot_num  = 5e2;  % number of bootstrap samples
 
 %% SPECIFICATIONS
 
