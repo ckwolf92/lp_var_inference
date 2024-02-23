@@ -85,10 +85,7 @@ function alpha_worst = alpha_worst_fn(dgp,settings);
         end
         alpha_worst_norm = sqrt(alpha_worst_norm);
         scale_i = M_tilde/alpha_worst_norm;
-        alpha_worst(:,:,:,i) = alpha_worst(:,:,:,i) * scale_i;
-        if ~(sign(alpha_worst(1,1,2,i)) == sign(alpha_tilde(2,1,1)))
-            alpha_worst(:,:,:,i) = -alpha_worst(:,:,:,i);
-        end
+        alpha_worst(:,:,:,i) = -alpha_worst(:,:,:,i) * scale_i;
     end
     
     alpha_worst = permute(alpha_worst,[3 1 2 4]);
