@@ -27,7 +27,7 @@ dgp.worst_hor  = 4; % horizon for maximal distortion \alpha(L)
 
 % system size
 
-dgp.n_y   = 3;
+dgp.n_y   = 4;
 dgp.n_eps = dgp.n_y;
 
 %% SETTINGS
@@ -46,10 +46,10 @@ settings.sim.num_workers = 10; % no. of parallel workers (=0: run serial)
 % Estimation
 %----------------------------------------------------------------
 
-settings.est.type = 'bworst'; % estimation methods type
+settings.est.type = 'worst'; % estimation methods type
 
 settings.est.ps        = dgp.ps; % lag length used for estimation
-settings.est.horzs     = [1:1:16]; % horizons of interest
+settings.est.horzs     = [0:1:40]; % horizons of interest
 settings.est.no_const  = true; % true: omit intercept
 settings.est.se_homosk = true; % true: homoskedastic ses
 settings.est.alpha     = 0.1; % significance level
@@ -57,8 +57,8 @@ settings.est.alpha     = 0.1; % significance level
 settings.est.p_select  = 1; % use information criterion to select lag length? (1 for AIC, 2 for BIC)
 settings.p_max         = 10; % maximal lag length to consider
 
-settings.est.resp_ind  = 1; % index of response variable of interest
-settings.est.innov_ind = 3; % index of innovation of interest
+settings.est.resp_ind  = 2; % index of response variable of interest
+settings.est.innov_ind = 1; % index of innovation of interest
 
 settings.est.boot      = true; % true: bootstrap
 settings.est.boot_num  = 5e3;  % number of bootstrap samples

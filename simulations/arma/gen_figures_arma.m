@@ -16,7 +16,7 @@ dgp_type = 'arma_boot'; % either 'arma_delta', 'arma_boot', or 'arma_limit'
 
 % file names
 load_filename = fullfile('results', strcat('sim_', dgp_type, '.mat'));  % load results from this file
-save_suffix   = '.png'; % suffix for saved figures
+save_suffix   = '.eps'; % suffix for saved figures
 
 % select DGPs, CI procedures, and line specs
 switch dgp_type(6)
@@ -92,6 +92,7 @@ left_pos = [gapsize_edges, gapsize_edges + gapsize + plotwidth];
 for d=dgp_sel
 
     the_f = figure;
+    compute_var_acovg
 
     % coverage probability
     subplot(1,2,1)
@@ -102,6 +103,10 @@ for d=dgp_sel
     pos(3) = plotwidth;
     set(gca,'Position', pos)
     hold on;
+
+    plot(horzs, var_asymp_covg, 'Color', 'k', ...
+        'LineStyle', ':', 'LineWidth', 2)  % Asymptotic VAR coverage
+    
     for j=1:numproc
         plot(horzs, squeeze(results.coverage_prob(d,procs(j,1),:,procs(j,2))), ...
             line_specs{j}, 'Color', line_colors(j,:),'LineWidth',3);
@@ -144,7 +149,9 @@ for d=dgp_sel
     set(gcf, 'PaperPositionMode', 'auto');
     
     % save
-    saveas(the_f,sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix));
-    close(the_f);
+
+%    saveas(the_f,sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix));
+    exportgraphics(the_f, sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix))
+    %close(the_f);
 
 end

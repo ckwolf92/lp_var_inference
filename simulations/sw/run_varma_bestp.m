@@ -37,9 +37,9 @@ settings = struct;
 % Monte Carlo Simulation
 %----------------------------------------------------------------
 
-settings.sim.numrep      = 1e3; % no. of repetitions
+settings.sim.numrep      = 5e3; % no. of repetitions
 settings.sim.rng_seed    = 202007252; % random number seed
-settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
+settings.sim.num_workers = 10; % no. of parallel workers (=0: run serial)
 
 %----------------------------------------------------------------
 % Estimation
@@ -60,7 +60,7 @@ settings.est.resp_ind  = 1; % index of response variable of interest
 settings.est.innov_ind = 3; % index of innovation of interest
 
 settings.est.boot      = true; % true: bootstrap
-settings.est.boot_num  = 5e2;  % number of bootstrap samples
+settings.est.boot_num  = 5e3;  % number of bootstrap samples
 
 %% SPECIFICATIONS
 

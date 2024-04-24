@@ -19,15 +19,15 @@ dgp = struct;
 
 % parameters
 
-dgp.ps         = dgp_settings.ps(1); % lags
+dgp.ps         = dgp_settings.ps; % lags
 dgp.T          = 240;  % sample size
 dgp.T_scale    = dgp_settings.T; % artificial sample size to scale mis-specification
 dgp.zeta       = dgp_settings.zeta; % mis-specification dampening
-dgp.worst_hor  = 4; % horizon for maximal distortion \alpha(L)
 
 % system size
 
-dgp.n_y   = 3;
+% dgp.n_y   = 5;
+dgp.n_y   = 4;
 dgp.n_eps = dgp.n_y;
 
 %% SETTINGS
@@ -46,19 +46,16 @@ settings.sim.num_workers = 10; % no. of parallel workers (=0: run serial)
 % Estimation
 %----------------------------------------------------------------
 
-settings.est.type = 'bworst'; % estimation methods type
+settings.est.type = 'fixp'; % estimation methods type
 
 settings.est.ps        = dgp.ps; % lag length used for estimation
-settings.est.horzs     = [1:1:16]; % horizons of interest
+settings.est.horzs     = [0:1:40]; % horizons of interest
 settings.est.no_const  = true; % true: omit intercept
 settings.est.se_homosk = true; % true: homoskedastic ses
 settings.est.alpha     = 0.1; % significance level
 
-settings.est.p_select  = 1; % use information criterion to select lag length? (1 for AIC, 2 for BIC)
-settings.p_max         = 10; % maximal lag length to consider
-
-settings.est.resp_ind  = 1; % index of response variable of interest
-settings.est.innov_ind = 3; % index of innovation of interest
+settings.est.resp_ind  = 2; % index of response variable of interest
+settings.est.innov_ind = 1; % index of innovation of interest
 
 settings.est.boot      = true; % true: bootstrap
 settings.est.boot_num  = 5e3;  % number of bootstrap samples
@@ -117,8 +114,6 @@ ses    = estims;
 cis_lower = zeros(numdgp, numspec, numhorz, 4, numrep);
 cis_upper = cis_lower;
 
-ps = zeros(numdgp, numrep);
-
 %----------------------------------------------------------------
 % Start Parallel Workers
 %----------------------------------------------------------------
@@ -150,7 +145,7 @@ for i_dgp = 1:numdgp
     dgp.H_c         = dgp_inputs{indx_p}.H_c;
     dgp.D           = dgp_inputs{indx_p}.D;
     dgp.Sigma       = dgp_inputs{indx_p}.Sigma;
-    dgp.alpha_tilde = dgp_inputs{indx_p}.alpha_worst(:,:,:,dgp.worst_hor);
+    dgp.alpha_tilde = dgp_inputs{indx_p}.alpha_tilde;
 
     dgp.alpha_tilde(2:end,:,:) = dgp.T_scale^(dgp.zeta) * dgp.alpha_tilde(2:end,:,:);
 
@@ -173,11 +168,6 @@ for i_dgp = 1:numdgp
         % simulate data
         
         data_y = generate_data(dgp);
-        if settings.est.p_select == 0
-            p = dgp.p;
-        else
-            p = ic_var(data_y,settings.p_max,settings.est.p_select);
-        end
         
         % placeholders
         
@@ -191,7 +181,7 @@ for i_dgp = 1:numdgp
         for i_spec = 1:numspec
         
             [i_rep_estims(i_spec,:),i_rep_ses(i_spec,:),i_cis_dm,i_cis_boot] ...
-                = ir_estim(data_y, p, settings.est.horzs, spec_shared{:}, specs{i_spec}{:});
+                = ir_estim(data_y, settings.est.p, settings.est.horzs, spec_shared{:}, specs{i_spec}{:});
             
             i_rep_cis_lower(i_spec,:,1) = i_cis_dm(1,:);
             i_rep_cis_upper(i_spec,:,1) = i_cis_dm(2,:);
@@ -207,7 +197,6 @@ for i_dgp = 1:numdgp
         ses(i_dgp,:,:,i_rep) = i_rep_ses;
         cis_lower(i_dgp,:,:,:,i_rep) = i_rep_cis_lower;
         cis_upper(i_dgp,:,:,:,i_rep) = i_rep_cis_upper;
-        ps(i_dgp,i_rep) = p;
         
         if mod(i_rep, ceil(numrep/10)) == 0
             fprintf('%6d%s\n', round(i_rep/numrep*100), '%');
@@ -237,7 +226,6 @@ results.estims    = estims;
 results.ses       = ses;
 results.cis_lower = cis_lower;
 results.cis_upper = cis_upper;
-results.ps        = ps;
 
 clear estims ses cis_lower cis_upper
 

@@ -55,6 +55,9 @@ for i_p = 1:settings.n_p
     % run model
     
     dynare SW_Model noclearall
+    dynare('SW_Model', 'noclearall');
+
+
     clean_folder_SW
     
     SW_model.decision = decision(2:end,:);

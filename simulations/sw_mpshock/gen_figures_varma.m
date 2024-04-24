@@ -16,7 +16,7 @@ dgp_type = 'varma_bworst'; % either 'varma_fixp', 'varma_estp', 'varma_worst', '
 
 % file names
 load_filename = fullfile('results', strcat('sim_', dgp_type, '.mat'));  % load results from this file
-save_suffix   = '.png'; % suffix for saved figures
+save_suffix   = '.eps'; % suffix for saved figures
 
 % select DGPs, CI procedures, and line specs
 switch dgp_type(7:8)
@@ -115,11 +115,12 @@ gapsize_edges = (1-2*plotwidth-gapsize)/2;
 left_pos = [gapsize_edges, gapsize_edges + gapsize + plotwidth];
 
 % plot figure
-
 for d=dgp_sel
 
-    the_f = figure;
+    compute_var_acovg
 
+    the_f = figure;
+    
     % coverage probability
     subplot(1,2,1)
     pos = get(gca, 'Position');
@@ -129,12 +130,18 @@ for d=dgp_sel
     pos(3) = plotwidth;
     set(gca,'Position', pos)
     hold on;
+    
+    plot(horzs, var_asymp_covg, 'Color', 'k', ...
+        'LineStyle', ':', 'LineWidth', 2)  % Asymptotic VAR coverage
+
     for j=1:numproc
         plot(horzs, squeeze(results.coverage_prob(d,procs(j,1),:,procs(j,2))), ...
             line_specs{j}, 'Color', line_colors(j,:),'LineWidth',3);
     end
     plot(horzs, (1-settings.est.alpha) * ones(1,length(horzs)), ...
         'Color', 'k', 'LineStyle', ':', 'LineWidth', 2); % Nominal confidence level
+
+    
     hold off;
     xlim([min(horzs) max(horzs)])
     xlabel('horizon','interpreter','latex');
@@ -171,7 +178,8 @@ for d=dgp_sel
     set(gcf, 'PaperPositionMode', 'auto');
     
     % save
-    saveas(the_f,sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix));
+%    saveas(the_f,sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix));
+    exportgraphics(the_f, sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix))
     close(the_f);
 
 end

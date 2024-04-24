@@ -37,9 +37,9 @@ settings = struct;
 % Monte Carlo Simulation
 %----------------------------------------------------------------
 
-settings.sim.numrep      = 1e3; % no. of repetitions
+settings.sim.numrep      = 5e3; % no. of repetitions
 settings.sim.rng_seed    = 202007252; % random number seed
-settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
+settings.sim.num_workers = 11; % no. of parallel workers (=0: run serial)
 
 %----------------------------------------------------------------
 % Estimation
@@ -48,7 +48,7 @@ settings.sim.num_workers = 8; % no. of parallel workers (=0: run serial)
 settings.est.type = 'bestp'; % estimation methods type
 
 settings.est.ps        = dgp.ps; % lag length used for estimation
-settings.est.horzs     = [1:1:16]; % horizons of interest
+settings.est.horzs     = [0:1:16]; % horizons of interest
 settings.est.no_const  = true; % true: omit intercept
 settings.est.se_homosk = true; % true: homoskedastic ses
 settings.est.alpha     = 0.1; % significance level
@@ -60,7 +60,7 @@ settings.est.resp_ind  = 2; % index of response variable of interest
 settings.est.innov_ind = 1; % index of innovation of interest
 
 settings.est.boot      = true; % true: bootstrap
-settings.est.boot_num  = 5e2;  % number of bootstrap samples
+settings.est.boot_num  = 5e3;  % number of bootstrap samples
 
 %% SPECIFICATIONS
 
