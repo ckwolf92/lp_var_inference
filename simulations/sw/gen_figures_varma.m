@@ -8,11 +8,12 @@ clear all
 close all
 
 warning('off','MATLAB:dispatcher:nameConflict')
+addpath(genpath('../../functions/'))
 
 %% SETTINGS
 
 % DGP type
-dgp_type = 'varma_bworst'; % either 'varma_fixp', 'varma_estp', 'varma_worst', 'varma_bfixp', 'varma_bestp', or 'varma_bworst'
+dgp_type = 'varma_bfixp_longT'; % either 'varma_fixp', 'varma_estp', 'varma_worst', 'varma_bfixp', 'varma_bestp', or 'varma_bworst'
 
 % file names
 load_filename = fullfile('results', strcat('sim_', dgp_type, '.mat'));  % load results from this file
@@ -84,6 +85,12 @@ ylim_cover = [0 1]; % y-limits for coverage prob plot
 yticks_length = -3:1:1; % y-ticks for median length plot (log10 scale)
 yticklabels_length = {'0.001', '0.01', '0.1', '1', '10'}; % y-tick labels for median length plot
 
+
+if strcmp(dgp_type, 'varma_bfixp_longT')
+    p_sel = [2,4];
+end
+
+
 %% LOAD RESULTS
 
 load(load_filename);
@@ -131,8 +138,7 @@ for d=dgp_sel
     set(gca,'Position', pos)
     hold on;
     
-    plot(horzs, var_asymp_covg, 'Color', 'k', ...
-        'LineStyle', ':', 'LineWidth', 2)  % Asymptotic VAR coverage
+
 
     for j=1:numproc
         plot(horzs, squeeze(results.coverage_prob(d,procs(j,1),:,procs(j,2))), ...
@@ -140,7 +146,9 @@ for d=dgp_sel
     end
     plot(horzs, (1-settings.est.alpha) * ones(1,length(horzs)), ...
         'Color', 'k', 'LineStyle', ':', 'LineWidth', 2); % Nominal confidence level
-
+    
+    plot(horzs, var_asymp_covg, 'Color', 'k', ...
+        'LineStyle', ':', 'LineWidth', 2)  % Asymptotic VAR coverage
     
     hold off;
     xlim([min(horzs) max(horzs)])

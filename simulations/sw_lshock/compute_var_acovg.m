@@ -7,9 +7,8 @@ load('inputs/varma_sw_dgps.mat')
 if length(dgp.ps) > 1  % Recompute DGP if bfixp
     
     assert(contains(dgp_type, 'fixp'))    
-    
     i_dgp  = d;
-    indx_p = find(dgp.ps == dgp.dgps(1, i_dgp));
+    indx_p   = find(dgp_settings.ps == dgp.dgps(1,i_dgp));
 
     dgp.p           = dgp.ps(i_dgp);
     dgp.n_yp        = dgp.n_y * dgp.p;
@@ -171,3 +170,7 @@ covg      = normcdf(zstar  - abias_VAR./sqrt(avar_VAR)) - ...
 
 end
 
+
+function out = vec(A)
+    out = A(:);
+end
