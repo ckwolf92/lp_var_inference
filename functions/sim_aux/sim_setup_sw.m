@@ -1,4 +1,4 @@
-% sim_setup_sw.m  Smets Wouters-specific setup
+% Smets Wouters-specific setup
 
 switch spec
     case 'fixp'

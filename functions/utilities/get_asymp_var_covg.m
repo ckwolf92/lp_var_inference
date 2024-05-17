@@ -1,6 +1,6 @@
 function covg = get_asymp_var_covg(dgp, horzs, i, j, alpha)
     
-    % get_asymp_var_covg  Get VAR asymptotic coverage
+    % Get VAR asymptotic coverage
     
     % Inputs:
     % dgp   struct          dgp for simulations
@@ -12,17 +12,17 @@ function covg = get_asymp_var_covg(dgp, horzs, i, j, alpha)
     % covg [#horizons x 1]  Coverage probability
 
 
-avar_VAR  = get_var_avar(dgp, horzs, i, j);
-abias_VAR = get_var_abias(dgp, horzs, i, j);
-zstar     = norminv(1-alpha/2);
-covg      = normcdf(zstar  - abias_VAR./sqrt(avar_VAR)) - ...
-    normcdf(-zstar - abias_VAR./sqrt(avar_VAR));
+    avar_VAR  = get_var_avar(dgp, horzs, i, j);
+    abias_VAR = get_var_abias(dgp, horzs, i, j);
+    zstar     = norminv(1-alpha/2);
+    covg      = normcdf(zstar  - abias_VAR./sqrt(avar_VAR)) - ...
+                    normcdf(-zstar - abias_VAR./sqrt(avar_VAR));
 
 
 %% Auxiliary functions
     
     function [e_i, e_j] = get_e(dgp, i, j)
-        % get_e  Selection vectors for indices i and j
+        % Get selection vectors for indices i and j
 
         e_i    = zeros(dgp.n_y*dgp.p, 1);
         e_i(i) = 1;  % Response selection vector
@@ -38,7 +38,7 @@ covg      = normcdf(zstar  - abias_VAR./sqrt(avar_VAR)) - ...
 
 
     function abias = get_var_abias(dgp, horzs, i, j)
-        % get_var_abias  Get VAR asymptotic bias
+        % Get VAR asymptotic bias
 
 
         % Compute relevant objects
@@ -78,7 +78,7 @@ covg      = normcdf(zstar  - abias_VAR./sqrt(avar_VAR)) - ...
 
 
     function avar_VAR = get_var_avar(dgp, horzs, i, j)
-        % get_avar_VAR  Get VAR asymptotic variance
+        % Get VAR asymptotic variance
 
         % Preliminaries
         n_h      = length(horzs);
@@ -102,7 +102,7 @@ covg      = normcdf(zstar  - abias_VAR./sqrt(avar_VAR)) - ...
 
 
     function S = get_S(dgp)
-        % get_S  S=Var(ytilde_t)
+        % Get S=Var(ytilde_t)
         % Note: See Assumption 3.1(iv) of the main text.
         
         S = inv(eye(dgp.n_y^2*dgp.p^2) - ...
@@ -113,7 +113,7 @@ covg      = normcdf(zstar  - abias_VAR./sqrt(avar_VAR)) - ...
 
 
     function Psi = get_psi(dgp, horzs, i, j)
-        % get_psi  Get Psi_h
+        % Get Psi_h
         % Note: See Proposition 3.2 of the main text.
     
         n_h = length(horzs);    % Number of horizons

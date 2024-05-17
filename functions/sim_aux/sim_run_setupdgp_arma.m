@@ -1,4 +1,4 @@
-% sim_run_setupdgp_arma.m  ARMA: Setup dgp structure for sim_run.m.
+% ARMA: Setup dgp structure for sim_run.m.
 
 indx_rho   = find(dgp_settings.rhos == dgps(1,i_dgp));
 indx_theta = find(dgp_settings.thetas == dgps(2,i_dgp));

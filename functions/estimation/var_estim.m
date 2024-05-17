@@ -1,12 +1,12 @@
 function [betahat, betahat_varcov, Sigmahat, Sigmahat_varcov, res] ...
             = var_estim(Y, num_lags, se_setting, no_const, df_override)
-arguments
-Y
-num_lags
-se_setting
-no_const
-df_override = []
-end
+    arguments
+    Y
+    num_lags
+    se_setting
+    no_const
+    df_override = []
+    end
     % Reduced-form Vector Autoregression
     
     % Inputs:

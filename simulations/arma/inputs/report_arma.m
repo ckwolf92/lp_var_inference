@@ -1,4 +1,5 @@
 %% GET POPULATION VARMA(p,infty) AS DGP
+% Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
 % this version: 02/07/2024
 
 %% HOUSEKEEPING

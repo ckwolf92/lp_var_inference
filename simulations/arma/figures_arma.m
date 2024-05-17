@@ -1,4 +1,5 @@
 %% LP vs VAR INFERENCE: GENERATE FIGURES
+% Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
 % this version: 05/16/2024
 
 %% HOUSEKEEPING
@@ -15,4 +16,3 @@ warning('off','MATLAB:dispatcher:nameConflict')
 % either arma_ or arma_boot
 dgp_type = 'arma_';  
 sim_genfigures
-

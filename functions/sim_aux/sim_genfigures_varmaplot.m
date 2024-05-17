@@ -1,5 +1,4 @@
-% sim_genfigures_varmaplot.m  VARMA: Select DGPs, CI procedures, and line specs for
-%                             sim_genfigures.m
+% VARMA: Select DGPs, CI procedures, and line specs for sim_genfigures.m
 
 switch dgp_type(7:8)
     case 'fi'

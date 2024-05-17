@@ -1,4 +1,5 @@
 %% LP vs VAR INFERENCE: GENERATE FIGURES
+% Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
 % this version: 05/16/2024
 
 %% HOUSEKEEPING
@@ -14,6 +15,5 @@ addpath(genpath('../../functions'))
 % DGP type
 % either 'varma_fixp',  'varma_fixplongT', 'varma_estp',     'varma_worst', 
 %        'varma_bfixp', 'varma_fixplongT', 'varma_bestp', or 'varma_bworst'
-dgp_type = 'varma_worst';
+dgp_type = 'varma_fixplongT';
 sim_genfigures
-

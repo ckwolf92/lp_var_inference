@@ -1,4 +1,4 @@
-% sim_run_setupdgp_arma.m  Smets-Wouters: Setup dgp structure for sim_run.m.
+% mets-Wouters: Setup dgp structure for sim_run.m.
 
 indx_p   = find(dgp_settings.ps == dgps(1,i_dgp));
 
@@ -20,9 +20,10 @@ switch spec
 
 end
 
-% ---------------------------------------------------------------------
-% set up DGP
-% ---------------------------------------------------------------------
+%---------------------------------------------------------------------
+% Set up DGP
+%---------------------------------------------------------------------
+
 dgp.p           = dgp.ps(i_dgp);
 dgp.n_yp        = dgp.n_y * dgp.p;
 dgp.A           = dgp_inputs{indx_p}.A;

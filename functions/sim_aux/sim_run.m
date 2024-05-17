@@ -1,4 +1,4 @@
-% sim_run.m  Run simulations
+% Run simulations
 
 %% PRELIMINARIES
 

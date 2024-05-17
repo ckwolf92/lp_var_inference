@@ -1,4 +1,4 @@
-% sim_setup_general.m  Shared settings
+% Shared settings
 
 
 % Initialize

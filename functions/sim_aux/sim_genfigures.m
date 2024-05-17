@@ -1,4 +1,4 @@
-% sim_genfigures.m  Generate figures from simulation results
+% Generate figures from simulation results
 
 % file names
 load_filename = fullfile('results', strcat('sim_', dgp_type, '.mat'));  % load results from this file
@@ -54,7 +54,7 @@ for d=dgp_sel
     % coverage probability
     subplot(1,2,1)
     pos = get(gca, 'Position');
-    set(gca,'FontSize',12)
+    set(gca,'FontSize',18)
     set(gca,'TickLabelInterpreter','latex')
     pos(1) = left_pos(1);
     pos(3) = plotwidth;
@@ -63,12 +63,14 @@ for d=dgp_sel
     
     for j=1:numproc
         plot(horzs, squeeze(results.coverage_prob(d,procs(j,1),:,procs(j,2))), ...
-            line_specs{j}, 'Color', line_colors(j,:),'LineWidth',3);
+            line_specs{j}, 'Color', line_colors(j,:),'LineWidth',5);
     end
     plot(horzs, (1-settings.est.alpha) * ones(1,length(horzs)), ...
-        'Color', 'k', 'LineStyle', ':', 'LineWidth', 2); % Nominal confidence level
-    plot(horzs, var_asymp_covg, 'Color', 'k', ...
-        'LineStyle', ':', 'LineWidth', 2)  % Asymptotic VAR coverage
+        'Color', 'k', 'LineStyle', ':', 'LineWidth', 3.5); % Nominal confidence level
+    if dgp.T == 2000
+        plot(horzs, var_asymp_covg, 'Color', [255/255 165/255 0/255], ...
+            'LineStyle', ':', 'LineWidth', 3.5)  % Asymptotic VAR coverage
+    end
 
     
     hold off;
@@ -81,7 +83,7 @@ for d=dgp_sel
     % median length
     subplot(1,2,2)
     pos = get(gca, 'Position');
-    set(gca,'FontSize',12)
+    set(gca,'FontSize',18)
     set(gca,'TickLabelInterpreter','latex')
     pos(1) = left_pos(2);
     pos(3) = plotwidth;
@@ -89,7 +91,7 @@ for d=dgp_sel
     hold on;
     for j=1:numproc
         plot(horzs, squeeze(log10(results.median_length(d,procs(j,1),:,procs(j,2)))), ...
-            line_specs{j}, 'Color', line_colors(j,:),'LineWidth',3);
+            line_specs{j}, 'Color', line_colors(j,:),'LineWidth',5);
     end
     hold off;
     xlim([min(horzs) max(horzs)])
@@ -103,11 +105,10 @@ for d=dgp_sel
 
     % size
     pos = get(gcf, 'Position');
-    set(gcf, 'Position', [pos(1) pos(2) 1.3*1*pos(3) 1.3*0.56*pos(4)]);
+    set(gcf, 'Position', [pos(1) pos(2) 2*pos(3) pos(4)]);
     set(gcf, 'PaperPositionMode', 'auto');
     
     % save
-%    saveas(the_f,sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix));
     exportgraphics(the_f, sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix))
     close(the_f);
 

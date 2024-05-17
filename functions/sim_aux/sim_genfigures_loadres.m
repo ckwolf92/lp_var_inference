@@ -1,4 +1,4 @@
-% sim_genfigures_loadres.m  Load results files for sim_genfigures.m
+% Load results files for sim_genfigures.m
 
 load(load_filename);
 
