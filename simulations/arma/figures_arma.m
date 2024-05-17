@@ -13,6 +13,6 @@ warning('off','MATLAB:dispatcher:nameConflict')
 %% SETTINGS
 
 % DGP type
-% either arma_ or arma_boot
+% either arma_ or arma_b
 dgp_type = 'arma_';  
 sim_genfigures

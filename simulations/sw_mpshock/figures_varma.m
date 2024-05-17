@@ -14,6 +14,6 @@ addpath(genpath('../../functions'))
 
 % DGP type
 % either 'varma_fixp',  'varma_fixplongT', 'varma_estp',     'varma_worst', 
-%        'varma_bfixp', 'varma_fixplongT', 'varma_bestp', or 'varma_bworst'
+%        'varma_bfixp', 'varma_bfixplongT', 'varma_bestp', or 'varma_bworst'
 dgp_type = 'varma_fixp';
 sim_genfigures
