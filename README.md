@@ -10,12 +10,12 @@ Tested in: Matlab R2023b on Macbook Pro 2023
 ## Contents
 
 **[functions](functions):** auxiliary routines
-- [estimation](estimation): functions for LP and VAR estimation
-- [utilities](utilities): utility functions
+- [estimation](functions/estimation): functions for LP and VAR estimation
+- [utilities](functions/utilities): utility functions
 
 **[simulations](simulations):** simulation studies
-- [arma](arma): map arma into local-to-AR representation ([get_arma.m](simulations/arma/inputs/get_arma.m), [report_arma.m](simulations/arma/inputs/report_arma.m)) + run simulations ([run_arma.m](simulations/arma/run_arma.m)) + generate figures ([figures_arma.m](simulations/arma/figures_arma.m))
-- [sw](sw_lshock): map Smets-Wouters model into local-to-VAR representation ([get_varma_sw.m](simulations/sw_lshock/inputs/get_varma.sw.m), [report_varma_sw.m](simulations/sw_lshock/inputs/report_varma_sw.m)) + run simulations ([run_varma_sw.m](simulations/sw_lshock/run_varma.m)) + generate figures ([figures_varma_sw.m](simulations/sw_lshock/figures_varma.m)), for three different variable selections and identification schemes
+- [arma](simulations/arma): map arma into local-to-AR representation ([get_arma.m](simulations/arma/inputs/get_arma.m), [report_arma.m](simulations/arma/inputs/report_arma.m)) + run simulations ([run_arma.m](simulations/arma/run_arma.m)) + generate figures ([figures_arma.m](simulations/arma/figures_arma.m))
+- [sw](simulations/sw_lshock): map Smets-Wouters model into local-to-VAR representation ([get_varma_sw.m](simulations/sw_lshock/inputs/get_varma.sw.m), [report_varma_sw.m](simulations/sw_lshock/inputs/report_varma_sw.m)) + run simulations ([run_varma_sw.m](simulations/sw_lshock/run_varma.m)) + generate figures ([figures_varma_sw.m](simulations/sw_lshock/figures_varma.m)), for three different variable selections and identification schemes
 - [aux](aux): auxiliary simulation-specific routines
 
 ## Acknowledgements
