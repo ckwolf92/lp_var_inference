@@ -9,6 +9,10 @@ Tested in: Matlab R2023b on Macbook Pro 2023
 
 ## Contents
 
+**[documents](documents):** paper and supplement
+- [lp_varithmetic.pdf](documents/lp_varithmetic.pdf): main paper
+- [lp_varithmetic_supplement.pdf](documents/lp_varithmetic_supplement.pdf): online supplement
+
 **[functions](functions):** auxiliary routines
 - [estimation](functions/estimation): functions for LP and VAR estimation
 - [utilities](functions/utilities): utility functions
