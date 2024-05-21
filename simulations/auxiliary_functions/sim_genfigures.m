@@ -1,15 +1,15 @@
 % Generate figures from simulation results
 
 % file names
-load_filename = fullfile('results', strcat('sim_', dgp_type, '.mat'));  % load results from this file
 save_suffix   = '.eps'; % suffix for saved figures
 
-
 if contains(dgp_type, 'varma')
+    load_filename = fullfile('results', strcat('sim_', dgp_type, '_', scheme, '.mat'));  % load results from this file
     sim_genfigures_varmaplot;
 
 elseif contains(dgp_type, 'arma') 
     sim_genfigures_armaplot    
+    load_filename = fullfile('results', strcat('sim_', dgp_type, '.mat'));  % load results from this file
 end
 
 if contains(dgp_type, 'longT')
@@ -30,9 +30,14 @@ numproc = length(proc_names); % number of inference procedures
 %% GENERATE FIGURES
 
 % set-up
+if contains(dgp_type, 'varma')
+    status        = mkdir(['figures/', scheme]);
+    save_filename = fullfile('figures/',scheme, '/', dgp_type); % first part of file name for saved figures
+elseif contains(dgp_type, 'arma') 
+    status        = mkdir(['figures/']);
+    save_filename = fullfile('figures/', dgp_type); % first part of file name for saved figures
+end
 
-status        = mkdir('figures');
-save_filename = fullfile('figures', dgp_type); % first part of file name for saved figures
 
 horzs   = settings.est.horzs;
 numhorz = length(horzs); % no. of estimated impulse response horizons
@@ -107,9 +112,15 @@ for d=dgp_sel
     pos = get(gcf, 'Position');
     set(gcf, 'Position', [pos(1) pos(2) 2*pos(3) pos(4)]);
     set(gcf, 'PaperPositionMode', 'auto');
+ 
+    graphic_path = [save_filename, '_dgp', num2str(d), save_suffix];
     
     % save
-    exportgraphics(the_f, sprintf('%s%s%d%s%d%s', save_filename, '_dgp', d, save_suffix))
+    exportgraphics(the_f,  graphic_path)
     close(the_f);
 
 end
+
+
+
+

@@ -1,6 +1,6 @@
 %% LP vs VAR INFERENCE: GENERATE FIGURES
 % Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 05/16/2024
+% this version: 05/21/2024
 
 %% HOUSEKEEPING
 
@@ -8,6 +8,7 @@ clc
 clear all
 close all
 addpath(genpath('../../functions'))
+addpath(genpath('../../auxiliary_functions'))
 warning('off','MATLAB:dispatcher:nameConflict')
 
 %% SETTINGS

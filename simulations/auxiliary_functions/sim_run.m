@@ -163,5 +163,11 @@ results.median_length = median(results.lengths,5);
 
 %% SAVE RESULTS
 
-results_filename = ['sim_', exercise, '_', settings.est.type];
+switch exercise
+    case 'arma'
+        results_filename = ['sim_', exercise, '_', settings.est.type];
+    case 'varma'
+        results_filename = ['sim_', exercise, '_', settings.est.type '_' scheme];
+end
+
 save(strcat('results/',results_filename, '.mat'), 'dgp', 'specs', 'settings', 'results');

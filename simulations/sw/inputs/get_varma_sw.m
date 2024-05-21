@@ -1,19 +1,26 @@
 %% GET POPULATION VARMA(p,infty) AS DGP
-% Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 02/07/2024
+% this version: 05/21/2024
+% Input:
+% - resp_ind:     Index of response variable of interest
+% - innov_ind:    Index of innovation variable
+% - SW_model_obs: Variable indices
 
-%% HOUSEKEEPING
-
+clear
 clc
-clear all
 close all
-
 warning('off','MATLAB:dispatcher:nameConflict')
-
+addpath(genpath('../../auxiliary_functions'))
 addpath(genpath('../../../functions'))
-addpath('_subroutines')
+
+
+% -------------------------------------------------------------------------
+% MODIFY TO SET SCHEME
+% -------------------------------------------------------------------------
+scheme = 'mprecursive';  % mpshock, lshock, or mprecursive
+sim_setscheme_sw
 
 %% SETTINGS
+
 
 %----------------------------------------------------------------
 % Lag Lengths
@@ -35,13 +42,18 @@ settings.alpha_lags         = 100;
 %----------------------------------------------------------------
 % DGP Settings
 %----------------------------------------------------------------
+settings.resp_ind           = resp_ind; % response variable of interest
+settings.innov_ind          = innov_ind; % innovation variable of interest
 
+% Other
 settings.max_hor_h          = 10; % maximal IRF horizon of interest
 settings.max_hor_alpha_l    = settings.VMA_hor; % maximal lag length for worst-case \alpha(L)
-settings.resp_ind           = 2; % response variable of interest
-settings.innov_ind          = 1; % innovation variable of interest
 settings.T                  = 240; % sample size for DGP
 settings.zeta               = 1/2; % mis-specification scaling
+
+
+
+
 
 %% GET DGPs
 
@@ -62,8 +74,7 @@ for i_p = 1:settings.n_p
     
     % ABCD representation
     
-    SW_model.obs = [1 19 20 21]; % (shock,pi,w,l)
-    
+    SW_model.obs   = SW_model_obs;  
     SW_model.n_y   = size(SW_model.obs,2);
     SW_model.n_eps = M_.exo_nbr;
     SW_model.n_s   = M_.nspred;
@@ -110,5 +121,6 @@ dgp_inputs   = dgps;
 dgp_settings = settings;
 clear settings dgps
 
-results_filename = 'varma_sw_dgps';
+results_filename = ['varma_sw_dgps_' scheme];
 save(strcat(results_filename, '.mat'), 'dgp_inputs', 'dgp_settings');
+delete polfunction.mat

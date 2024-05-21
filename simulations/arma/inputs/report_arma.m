@@ -1,16 +1,15 @@
 %% GET POPULATION VARMA(p,infty) AS DGP
 % Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 02/07/2024
+% this version: 05/21/2024
 
 %% HOUSEKEEPING
 
 clc
-clear all
+clear
 close all
-
 warning('off','MATLAB:dispatcher:nameConflict')
-
 addpath(genpath('../../../functions'))
+addpath(genpath('../../auxiliary_functions'))
 
 %% SETTINGS
 

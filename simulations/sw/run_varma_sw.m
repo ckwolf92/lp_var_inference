@@ -1,6 +1,6 @@
 %% LP vs VAR INFERENCE: SIMULATIONS
 % Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 05/16/2024
+% this version: 05/21/2024
 
 %% HOUSEKEEPING
 
@@ -9,6 +9,13 @@ clear
 close all
 warning('off','MATLAB:dispatcher:nameConflict')
 addpath(genpath('../../functions'))
+addpath(genpath('../auxiliary_functions'))
+
+% -------------------------------------------------------------------------
+% MODIFY TO SET SW SCHEME
+% -------------------------------------------------------------------------
+scheme = 'mprecursive';  % mpshock, lshock, or mprecursive
+sim_setscheme_sw     % Settings for the SW shock ID scheme
 
 %% SETUP
 
@@ -27,15 +34,9 @@ Specifications    = cell2struct(cell(length(fields), 1), fields);
 Specifications(1) = struct('spec', 'worst', 'boot', false, 'longT', false);
 Specifications(2) = struct('spec', 'estp',  'boot', false, 'longT', false);
 Specifications(3) = struct('spec', 'fixp',  'boot', false, 'longT', false);
+Specifications(4) = struct('spec', 'fixp',  'boot', false, 'longT', true);
 
-%--------------------------------------------------------------------------
-% Further Settings
-%--------------------------------------------------------------------------
 
-resp_ind  = 2;    % index of response variable of interest
-innov_ind = 1;    % index of innovation variable
-horzs     = 0:40; % horizons of interest
+%% MAIN
 
-%% RUN SIMULATIONS
-
-sim_main_sw
+sim_main_sw       % Run simulations

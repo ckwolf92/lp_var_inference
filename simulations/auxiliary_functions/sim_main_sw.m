@@ -1,10 +1,11 @@
 % Run specifications for the Smets-Wouters exercises
 
+
 for jSpec = 1:length(Specifications)
 
     % Setup
-    clearvars -except jSpec Specifications resp_ind innov_ind horzs exercise
-    load('inputs/varma_sw_dgps')  % Load dynare results
+    clearvars -except jSpec Specifications resp_ind innov_ind horzs exercise scheme
+    load(['inputs/varma_sw_dgps_' scheme])  % Load dynare results
 
     spec  = Specifications(jSpec).spec;
     boot  = Specifications(jSpec).boot;

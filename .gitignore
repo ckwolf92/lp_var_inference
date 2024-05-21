@@ -5,9 +5,7 @@
 *.png
 *.eps
 *.tex
-simulations/ar1/results/*.*
-simulations/ar1/figures/*.*
-simulations/ar1/tables/*.*
-simulations/var1/results/*.*
-simulations/var1/figures/*.*
-simulations/var1/tables/*.*
+simulations/sw/results/*.*
+simulations/sw/figures/*.*
+simulations/arma/results/*.*
+simulations/arma/figures/*.*

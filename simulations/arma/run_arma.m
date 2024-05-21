@@ -1,6 +1,6 @@
 %% LP vs AR INFERENCE: SIMULATIONS
 % Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 05/16/2024
+% this version: 05/21/2024
 
 %% HOUSEKEEPING
 
@@ -9,6 +9,7 @@ clear
 close all
 warning('off','MATLAB:dispatcher:nameConflict')
 addpath(genpath('../../functions'))
+addpath(genpath('../auxiliary_functions'))
 
 %% SETUP
 
@@ -23,11 +24,11 @@ exercise  = 'arma';
 boot      = false;  % boot: Run bootstrap. 
 longT     = false;  % longT: true: Run T=2000. false: Run T=240.
 spec      = '';     % Empty for arma: Argument used for VARMA exercises.
+scheme    = '';     % Empty for arma: Argument used for VARMA exercises. 
 
 %--------------------------------------------------------------------------
 % Inputs
 %--------------------------------------------------------------------------
-
 load('inputs/arma_dgps')
 
 %--------------------------------------------------------------------------
