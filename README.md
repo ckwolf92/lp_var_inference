@@ -19,8 +19,8 @@ Tested in: MATLAB R2023b on Macbook Pro 2023 (M3 Pro)
 
 **[simulations](simulations):** Simulation studies
 - [arma](simulations/arma): Map ARMA into local-to-AR representation ([get_arma.m](simulations/arma/inputs/get_arma.m), [report_arma.m](simulations/arma/inputs/report_arma.m)) + run simulations ([run_arma.m](simulations/arma/run_arma.m)) + generate figures ([figures_arma.m](simulations/arma/figures_arma.m))
-- [sw](simulations/sw_lshock): Map Smets-Wouters model into local-to-VAR representation ([get_varma_sw.m](simulations/sw_lshock/inputs/get_varma_sw.m), [report_varma_sw.m](simulations/sw_lshock/inputs/report_varma_sw.m)) + run simulations ([run_varma_sw.m](simulations/sw_lshock/run_varma.m)) + generate figures ([figures_varma_sw.m](simulations/sw_lshock/figures_varma.m)), for three different variable selections and identification schemes
-- [aux](simulations/aux): Auxiliary simulation-specific routines
+- [sw](simulations/sw): Map Smets-Wouters model into local-to-VAR representation ([get_varma_sw.m](simulations/sw/inputs/get_varma_sw.m), [report_varma_sw.m](simulations/sw/inputs/report_varma_sw.m)) + run simulations ([run_varma_sw.m](simulations/sw/run_varma.m)) + generate figures ([figures_varma_sw.m](simulations/sw/figures_varma.m)), for three different variable selections and identification schemes
+- [auxiliary_functions](simulations/auxiliary_functions): Auxiliary simulation-specific routines
 
 ## Acknowledgements
 Our estimation routines build on the replication materials for [Montiel-Olea and Plagborg-Møller (2021)](https://github.com/jm4474/Lag-augmented_LocalProjections).
