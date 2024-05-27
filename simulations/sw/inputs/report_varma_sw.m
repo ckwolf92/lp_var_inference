@@ -10,14 +10,14 @@ warning('off','MATLAB:dispatcher:nameConflict')
 addpath(genpath('../../auxiliary_functions'))
 addpath(genpath('../../../functions'))
 
-% -------------------------------------------------------------------------
-% MODIFY TO SET SW SCHEME
-% -------------------------------------------------------------------------
-scheme = 'mprecursive';  % mpshock, lshock, or mprecursive
-sim_setscheme_sw
-
-
 %% SETTINGS
+
+%----------------------------------------------------------------
+% Set Identification Scheme
+%----------------------------------------------------------------
+
+scheme = 'lshock';  % mpshock, lshock, or mprecursive
+sim_setscheme_sw
 
 %----------------------------------------------------------------
 % Lag Lengths

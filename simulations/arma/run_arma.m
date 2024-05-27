@@ -23,12 +23,13 @@ horzs     = 1:6;    % horizons of interest
 exercise  = 'arma';
 boot      = false;  % boot: Run bootstrap. 
 longT     = false;  % longT: true: Run T=2000. false: Run T=240.
-spec      = '';     % Empty for arma: Argument used for VARMA exercises.
-scheme    = '';     % Empty for arma: Argument used for VARMA exercises. 
+spec      = '';     % empty for arma: Argument used for VARMA exercises.
+scheme    = '';     % empty for arma: Argument used for VARMA exercises. 
 
 %--------------------------------------------------------------------------
 % Inputs
 %--------------------------------------------------------------------------
+
 load('inputs/arma_dgps')
 
 %--------------------------------------------------------------------------

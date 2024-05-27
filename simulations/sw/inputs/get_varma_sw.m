@@ -1,9 +1,7 @@
 %% GET POPULATION VARMA(p,infty) AS DGP
 % this version: 05/21/2024
-% Input:
-% - resp_ind:     Index of response variable of interest
-% - innov_ind:    Index of innovation variable
-% - SW_model_obs: Variable indices
+
+%% HOUSEKEEPING
 
 clear
 clc
@@ -12,15 +10,14 @@ warning('off','MATLAB:dispatcher:nameConflict')
 addpath(genpath('../../auxiliary_functions'))
 addpath(genpath('../../../functions'))
 
-
-% -------------------------------------------------------------------------
-% MODIFY TO SET SCHEME
-% -------------------------------------------------------------------------
-scheme = 'mprecursive';  % mpshock, lshock, or mprecursive
-sim_setscheme_sw
-
 %% SETTINGS
 
+%----------------------------------------------------------------
+% Set Identification Scheme
+%----------------------------------------------------------------
+
+scheme = 'lshock';  % mpshock, lshock, or mprecursive
+sim_setscheme_sw
 
 %----------------------------------------------------------------
 % Lag Lengths
@@ -50,10 +47,6 @@ settings.max_hor_h          = 10; % maximal IRF horizon of interest
 settings.max_hor_alpha_l    = settings.VMA_hor; % maximal lag length for worst-case \alpha(L)
 settings.T                  = 240; % sample size for DGP
 settings.zeta               = 1/2; % mis-specification scaling
-
-
-
-
 
 %% GET DGPs
 

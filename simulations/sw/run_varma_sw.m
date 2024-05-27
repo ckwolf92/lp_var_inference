@@ -11,13 +11,14 @@ warning('off','MATLAB:dispatcher:nameConflict')
 addpath(genpath('../../functions'))
 addpath(genpath('../auxiliary_functions'))
 
-% -------------------------------------------------------------------------
-% MODIFY TO SET SW SCHEME
-% -------------------------------------------------------------------------
-scheme = 'mprecursive';  % mpshock, lshock, or mprecursive
-sim_setscheme_sw     % Settings for the SW shock ID scheme
-
 %% SETUP
+
+%----------------------------------------------------------------
+% Set Identification Scheme
+%----------------------------------------------------------------
+
+scheme = 'lshock';  % mpshock, lshock, or mprecursive
+sim_setscheme_sw
 
 %--------------------------------------------------------------------------
 % Specifications
@@ -35,7 +36,6 @@ Specifications(1) = struct('spec', 'worst', 'boot', false, 'longT', false);
 Specifications(2) = struct('spec', 'estp',  'boot', false, 'longT', false);
 Specifications(3) = struct('spec', 'fixp',  'boot', false, 'longT', false);
 Specifications(4) = struct('spec', 'fixp',  'boot', false, 'longT', true);
-
 
 %% MAIN
 

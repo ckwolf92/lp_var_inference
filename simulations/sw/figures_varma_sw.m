@@ -13,18 +13,20 @@ addpath(genpath('../auxiliary_functions'))
 
 %% SETTINGS
 
-% -------------------------------------------------------------------------
-% MODIFY TO SET SW SCHEME
-% -------------------------------------------------------------------------
-scheme   = 'mprecursive';  % Either mpshock, lshock, or mprecursive
+%----------------------------------------------------------------
+% Set Identification Scheme
+%----------------------------------------------------------------
+
+scheme = 'lshock';  % mpshock, lshock, or mprecursive
 
 % -------------------------------------------------------------------------
-% MODIFY TO SET dgp_type
+% Set DGP Type
 % -------------------------------------------------------------------------
+
 %    Either 'varma_fixp',  'varma_fixplongT',  'varma_estp',     'varma_worst', 
 %           'varma_bfixp', 'varma_bfixplongT', 'varma_bestp', or 'varma_bworst'
-dgp_type = 'varma_worst';
+dgp_type = 'varma_fixplongT';
 
 %% GENERATE FIGURES
 
-sim_genfigures  
+sim_genfigures

@@ -11,7 +11,6 @@ switch scheme
         horzs        = 0:40; 
         SW_model_obs = [1 19 20 21]; % (shock,pi,w,l)
 
-
     case 'mprecursive'
         resp_ind     = 1;    
         innov_ind    = 3;    
