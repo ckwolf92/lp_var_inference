@@ -22,6 +22,17 @@ Tested in: MATLAB R2023b on Macbook Pro 2023 (M3 Pro)
 - [sw](simulations/sw): Map Smets-Wouters model into local-to-VAR representation ([get_varma_sw.m](simulations/sw/inputs/get_varma_sw.m), [report_varma_sw.m](simulations/sw/inputs/report_varma_sw.m)) + run simulations ([run_varma_sw.m](simulations/sw/run_varma_sw.m)) + generate figures ([figures_varma_sw.m](simulations/sw/figures_varma_sw.m)), for three different variable selections and identification schemes
 - [auxiliary_functions](simulations/auxiliary_functions): Auxiliary simulation-specific routines
 
+## Instructions
+
+To replicate the main results reported in the paper it is always necessary to proceed in three steps: first, generate the DGP, in the inputs subfolder (e.g., [get_arma.m](simulations/arma/inputs/get_arma.m)); second, run the simulations (e.g., [run_arma.m](simulations/arma/run_arma.m)); and third, generate the figures (e.g., [figures_arma.m](simulations/arma/figures_arma.m)). Supplementary results for the total amount of misspecification are also generated in the inputs subfolder (e.g., [report_arma.m](simulations/arma/inputs/report_arma.m)).
+
+Detailed instructions for the main text figures and tables follow.
+
+- _Table 5.1_, _Figure 5.1_. Run the file [report_arma.m](simulations/arma/inputs/report_arma.m).
+- _Figure 5.2_. First run the file [get_arma.m](simulations/arma/inputs/get_arma.m). Then execute [run_arma.m](simulations/arma/run_arma.m) and finally [figures_arma.m](simulations/arma/figures_arma.m). Note that the option "boot" needs to be set to "true" to replicate the full set of results reported in the paper.
+- _Table 5.2_. Run the file [report_varma_sw.m](simulations/sw/inputs/report_varma_sw.m). The shock identification scheme needs to be set to "lshock".
+- _Figure 5.3_. First run the file [get_varma_sw.m](simulations/sw/inputs/get_varma_sw.m). Then execute [run_varma_sw.m](simulations/sw/run_varma_sw.m) and finally [figures_varma_sw.m](simulations/sw/figures_varma_sw.m). The shock identification scheme needs to be set to "lshock", the option "boot" in the various specifications needs to be set to "true", and the relevant DGP type needs to be selected in the figures file.
+
 ## Acknowledgements
 Our estimation routines build on the replication materials for [Montiel-Olea and Plagborg-Møller (2021)](https://github.com/jm4474/Lag-augmented_LocalProjections).
 
