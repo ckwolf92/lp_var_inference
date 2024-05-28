@@ -1,12 +1,12 @@
 function H_c = H_c_fn(H,p)
 
-    % Get companion form matrix
+    % Get companion form H matrix
     
     % Inputs:
-    % A         n_y x (n_y*p)     matrix of VAR coefficients (without constant)
+    % H         n_y x n_y       H matrix of local-to-VAR model (structural shock impact IRF)
     
     % Output:
-    % A_c       (n_y*p) x (n_y*p) companion form matrix
+    % H_c       (n_y*p) x n_y   companion form of H
     
 
     n   = size(H,1);
