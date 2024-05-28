@@ -170,4 +170,5 @@ switch exercise
         results_filename = ['sim_', exercise, '_', settings.est.type '_' scheme];
 end
 
+mkdir('results');
 save(strcat('results/',results_filename, '.mat'), 'dgp', 'specs', 'settings', 'results');

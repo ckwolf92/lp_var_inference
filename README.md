@@ -1,6 +1,6 @@
 # lp_var_inference
 
-MATLAB code for inference on impulse responses using Local Projections or VARs in local-to-VAR models.
+MATLAB code for inference on impulse responses using Local Projections or VARs.
 
 **Reference:**
 [Montiel Olea, José Luis](https://www.joseluismontielolea.com), [Mikkel Plagborg-Møller](https://www.mikkelpm.com), [Eric Qian](https://www.eric-qian.com) and [Christian K. Wolf](https://www.christiankwolf.com/) (2024), "Double Robustness of Local Projections and Some Unpleasant VARithmetic"
@@ -14,7 +14,7 @@ Tested in: MATLAB R2023b on Macbook Pro 2023 (M3 Pro)
 - [lp_varithmetic_supplement.pdf](documents/lp_varithmetic_supplement.pdf): Online supplement
 
 **[functions](functions):** Auxiliary routines
-- [estimation](functions/estimation): Functions for LP and VAR estimation
+- [estimation](functions/estimation): Functions for LP and VAR estimation and inference
 - [utilities](functions/utilities): Utility functions
 
 **[simulations](simulations):** Simulation studies

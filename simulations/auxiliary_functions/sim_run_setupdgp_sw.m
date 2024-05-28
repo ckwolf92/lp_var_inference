@@ -1,4 +1,4 @@
-% mets-Wouters: Setup dgp structure for sim_run.m.
+% Smets-Wouters: Setup dgp structure for sim_run.m.
 
 indx_p   = find(dgp_settings.ps == dgps(1,i_dgp));
 

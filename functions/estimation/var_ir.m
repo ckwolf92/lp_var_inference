@@ -20,24 +20,20 @@ function [irs, jacob_a, jacob_s] = var_ir(A, Sigma, horzs)
     p = np/n;
 
     % Get companion form matrix
-    if p == 1
-        A_c = A;
-    else
-        A_c = A_c_fn(A);
-    end
+    A_c = A_c_fn(A);
 
     % Structural shock rotation and related auxiliary matrices
     C = chol(Sigma,'lower');
-    C_tilde = C * diag(diag(C))^(-1);
+    C_tilde = C * diag(1./diag(C));
 
     J = [eye(n),zeros(n,n*(p-1))];
     L = L_fn(n);
     K = K_fn(n,n);
-    H = L' * (L * (eye(n^2) + K) * kron(C,eye(n)) * L')^(-1);
-    tmp = diag(diag(-C.^(-2)));
+    H = L' / (L * (eye(n^2) + K) * kron(C,eye(n)) * L');
+    tmp = diag(diag(-C).^(-2));
     tmp = tmp(:);
     H_tilde_aux = diag(tmp) * H;
-    H_tilde = kron(eye(n),C) * H_tilde_aux + kron((diag(diag(C))^(-1))',eye(n)) * H;
+    H_tilde = kron(eye(n),C) * H_tilde_aux + kron((diag(1./diag(C)))',eye(n)) * H;
 
     % Placeholders
     irs = zeros(n,n,nh);
