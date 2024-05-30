@@ -13,6 +13,9 @@ Tested in: MATLAB R2023b on Macbook Pro 2023 (M3 Pro)
 - [lp_varithmetic.pdf](documents/lp_varithmetic.pdf): Main paper
 - [lp_varithmetic_supplement.pdf](documents/lp_varithmetic_supplement.pdf): Online supplement
 
+**[analytics](analytics):** Figures for analytical results
+- [figures_worstcase.m](analytics/figures_worstcase.m): Generate figures
+
 **[functions](functions):** Auxiliary routines
 - [estimation](functions/estimation): Functions for LP and VAR estimation and inference
 - [utilities](functions/utilities): Utility functions
@@ -24,10 +27,13 @@ Tested in: MATLAB R2023b on Macbook Pro 2023 (M3 Pro)
 
 ## Instructions
 
-To replicate the main results reported in the paper it is always necessary to proceed in three steps: first, generate the DGP, in the inputs subfolder (e.g., [get_arma.m](simulations/arma/inputs/get_arma.m)); second, run the simulations (e.g., [run_arma.m](simulations/arma/run_arma.m)); and third, generate the figures (e.g., [figures_arma.m](simulations/arma/figures_arma.m)). Supplementary results for the total amount of misspecification are also generated in the inputs subfolder (e.g., [report_arma.m](simulations/arma/inputs/report_arma.m)).
+To replicate the figures for the analytical results, run [figures_worstcase.m](analytics/figures_worstcase.m).
+
+To replicate the main simulation results reported in the paper it is always necessary to proceed in three steps: first, generate the DGP, in the inputs subfolder (e.g., [get_arma.m](simulations/arma/inputs/get_arma.m)); second, run the simulations (e.g., [run_arma.m](simulations/arma/run_arma.m)); and third, generate the figures (e.g., [figures_arma.m](simulations/arma/figures_arma.m)). Supplementary results for the total amount of misspecification are also generated in the inputs subfolder (e.g., [report_arma.m](simulations/arma/inputs/report_arma.m)).
 
 Detailed instructions for the main text figures and tables follow.
 
+- _Figures 4.1-4.3 and A.2-A.3_. Run the file [figures_worstcase.m](analytics/figures_worstcase.m).
 - _Table 5.1_, _Figure 5.1_. Run the file [report_arma.m](simulations/arma/inputs/report_arma.m).
 - _Figure 5.2_. First run the file [get_arma.m](simulations/arma/inputs/get_arma.m). Then execute [run_arma.m](simulations/arma/run_arma.m) and finally [figures_arma.m](simulations/arma/figures_arma.m). Note that the option "boot" needs to be set to "true" to replicate the full set of results reported in the paper.
 - _Table 5.2_. Run the file [report_varma_sw.m](simulations/sw/inputs/report_varma_sw.m). The shock identification scheme needs to be set to "lshock".
