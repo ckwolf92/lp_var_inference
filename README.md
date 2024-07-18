@@ -14,7 +14,10 @@ Tested in: MATLAB R2023b on Macbook Pro 2023 (M3 Pro)
 - [lp_varithmetic_supplement.pdf](documents/lp_varithmetic_supplement.pdf): Online supplement
 
 **[analytics](analytics):** Figures for analytical results
-- [figures_worstcase.m](analytics/figures_worstcase.m): Generate figures
+- [plot_worstcase.m](analytics/plot_worstcase.m): Generate figures
+
+**[emp_ses](emp_ses):** Compute empirical standard error ratios based on Ramey (2016)
+- [run_ramey_ses.m](emp_ses/run_ramey_ses.m): Compute LP and VAR SEs
 
 **[functions](functions):** Auxiliary routines
 - [estimation](functions/estimation): Functions for LP and VAR estimation and inference
@@ -27,7 +30,7 @@ Tested in: MATLAB R2023b on Macbook Pro 2023 (M3 Pro)
 
 ## Instructions
 
-To replicate the figures for the analytical results, run [figures_worstcase.m](analytics/figures_worstcase.m).
+To replicate the figures for the analytical results, first run [run_ramey_ses.m](emp_ses/run_ramey_ses.m) to generate the empirical LP and VAR standard errors, and then run [figures_worstcase.m](analytics/figures_worstcase.m) to get the figures.
 
 To replicate the main simulation results reported in the paper it is always necessary to proceed in three steps: first, generate the DGP, in the inputs subfolder (e.g., [get_arma.m](simulations/arma/inputs/get_arma.m)); second, run the simulations (e.g., [run_arma.m](simulations/arma/run_arma.m)); and third, generate the figures (e.g., [figures_arma.m](simulations/arma/figures_arma.m)). Supplementary results for the total amount of misspecification are also generated in the inputs subfolder (e.g., [report_arma.m](simulations/arma/inputs/report_arma.m)).
 
