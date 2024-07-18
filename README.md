@@ -36,7 +36,7 @@ To replicate the main simulation results reported in the paper it is always nece
 
 Detailed instructions for the main text figures and tables follow.
 
-- _Figures 4.1-4.3 and A.2-A.3_. Run the file [figures_worstcase.m](analytics/figures_worstcase.m).
+- _Figures 4.1-4.3 and A.2-A.3_. Run the file [plot_worstcase.m](analytics/plot_worstcase.m).
 - _Table 5.1_, _Figure 5.1_. Run the file [report_arma.m](simulations/arma/inputs/report_arma.m).
 - _Figure 5.2_. First run the file [get_arma.m](simulations/arma/inputs/get_arma.m). Then execute [run_arma.m](simulations/arma/run_arma.m) and finally [figures_arma.m](simulations/arma/figures_arma.m). Note that the option "boot" needs to be set to "true" to replicate the full set of results reported in the paper.
 - _Table 5.2_. Run the file [report_varma_sw.m](simulations/sw/inputs/report_varma_sw.m). The shock identification scheme needs to be set to "lshock".
