@@ -1,4 +1,4 @@
-function [irs, ses, cis_dm, cis_boot] = ir_estim(Y, p, horzs, varargin)
+function [irs, ses, cis_dm, cis_boot, ses_bootstrap] = ir_estim(Y, p, horzs, varargin)
 
     % Wrapper function for (V)AR or LP estimation of impulse responses
     % Delta method and bootstrap confidence intervals
@@ -167,6 +167,7 @@ function [irs, ses, cis_dm, cis_boot] = ir_estim(Y, p, horzs, varargin)
         
         % Compute bootstrap confidence intervals
         cis_boot = boot_ci(pseudo_truth, irs, ses, estims_boot, ses_boot, ip.Results.alpha);
+        ses_bootstrap = std( estims_boot);
         
         end
 

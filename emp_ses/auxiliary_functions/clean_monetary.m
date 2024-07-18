@@ -1,6 +1,6 @@
 function [y, shock, date, yname, shockname] = clean_monetary(data_raw)
 
-shockname = 'FF4_TC';                       % Shock variable name
+shockname  = 'FF4_TC';                       % Shock variable name
 yname      = {'LIP', 'LCPI', 'GS1', 'EBP'};  % Outcome variable names
 
 df      = data_raw;
@@ -13,6 +13,5 @@ df      = df(keep, :);  % Set date
 y       = df{:, yname};
 shock   = df{:, shockname}; 
 date    = df.date;
-
 
 end

@@ -1,21 +1,12 @@
-% clean_tax()
-%   Contains a MATLAB translation of jordatax.do from the replication package 
-% % of Ramey (2016)
-% Input:
-%   - path [string] 
-% Output:
-%   - 
-
 function [y, shock, date, yname, shockname] = clean_tech(data_raw)
+
 df       = data_raw;
 
-
-% Read data
+% read and adjust data
 df.date = clean_date(df.quarter);
 keep    = find(year(df.date)==1949 & month(df.date)==6):...
          find(year(df.date) == 2009 & month(df.date) == 12);
 df = df(keep, :);
-
 
 df.t = (1:height(df))';
 df.t2 = df.t.^2;
@@ -27,12 +18,10 @@ for var = {'rgdp' 'rcons' 'rnri' 'ybus' 'tothours' 'nbus' 'rstockp'}
     df{:, var} = 1000*df{:, var} ./ df.pop;
 end
 
-
 for var = {'rgdp' 'rcons' 'rnri' 'xtot' 'ybus' 'xbus' 'nbus' 'tothours' 'pgdp' 'rstockp'}
     df{:, strcat('l', var)} = log(df{:, var});
     df{:, strcat('dl', var)} = [NaN; df{2:end, strcat('l', var)} - df{1:end-1, strcat('l', var)}];
 end
-
 
 for var = {'ltfp' 'ltfp_util' 'ltfp_I' 'ltfp_I_util'}
     df{:, strcat('d', var)} = 400*[NaN; df{2:end, var} - df{1:end-1,  var}];
@@ -47,8 +36,5 @@ shock    = M* df.ford_tfp;
 date      = df.date;
 yname      = {'lrgdp', 'lrstockp', 'lxtot'};
 shockname = 'ford_tfp';
-
-
-
 
 end
