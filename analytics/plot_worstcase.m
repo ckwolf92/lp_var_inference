@@ -19,10 +19,13 @@ addpath(genpath('../emp_ses'))
 
 signif = 0.1;                           % significance level
 se_ratio = linspace(0.001,0.999,100);   % values of SE ratio to plot (sqrt{aVar(AR)/aVar(LP)})
+k = [1 2 5 10 20];                      % values of k to plot (for joint Wald confidence ellipsoid)
 M = [0.1 1 1.5 2 3];                    % values of M to plot
 linestyles = {'-','--','-.',':','.'};   % line style for each value of M
 plot_pos = [0 0 8 4];                   % figure position (in inches)
 plot_ylim_length = [0 2];               % vertical axis limits for relative length plot
+plot_ellipse_k = [2 3 4];               % which indices of the k vector to use as subplots when plotting worst-case ellipsoid coverage as a function of M
+plot_ellipse_M = [2 3 4];               % which indices of the M vector to use as subplots when plotting worst-case ellipsoid coverage as a function of k
 
 %----------------------------------------------------------------
 % Empirical SEs
@@ -75,13 +78,15 @@ r = @(b,c) normcdf(b-c)+normcdf(-b-c); % rejection probability
 cv = @(b) fzero(@(c) r(b,c)-signif,z+b); % bias-aware critical value
 prob_fct = @(k,b) log(r(b,z))+log(1-r(b/k,z)); % log joint probability Hausman rejects and VAR CI doesn't cover
 
+noncentr = M(:).^2.*(se_ratio(:).^(-2)'-1); % worst-case noncentrality parameter
+
 %----------------------------------------------------------------
 % Get Worst-Case Results
 %----------------------------------------------------------------
 
 % coverage
 
-wc_cov = 1-r(M(:).*sqrt(1./(se_ratio(:).^2)'-1),z);
+wc_cov = 1-r(sqrt(noncentr),z); % worst-case coverage of conventional CI as function of relative length
 
 % bias-aware + Hausman test
 
@@ -92,14 +97,14 @@ wc_prob = nan(1,n_r);
 wc_bias = nan(1,n_r);
 opts = optimoptions('fmincon','Display','notify');
 
-for i_r = 1:n_r
+for i_r=1:n_r
 
     the_aux = sqrt(1./se_ratio(i_r)^2-1);
 
     for i_M=1:n_M
 
         % critical value for bias-aware VAR CI
-        cv_var_aware(i_M,i_r) = cv(M(i_M)*the_aux);
+        cv_var_aware(i_M,i_r) = cv(sqrt(noncentr(i_M,i_r)));
 
         % optimal bias-aware CI
         the_obj = @(w) cv((1-w)*M(i_M)*the_aux/sqrt(1+w^2*the_aux^2))*sqrt(1+w^2*the_aux^2);
@@ -119,6 +124,14 @@ for i_r = 1:n_r
 end
 
 length_var_aware = (cv_var_aware/z).*se_ratio; % relative length of bias-aware VAR CI
+
+% worst-case coverage of joint Wald confidence ellipsoid
+
+n_k = length(k);
+wc_prob_wald = nan(n_M,n_r,n_k);
+for i_k=1:n_k
+    wc_prob_wald(:,:,i_k) = ncx2cdf(chi2inv(1-signif,k(i_k)),k(i_k),noncentr);
+end
 
 %% EXTRACT SE RATIOS
 
@@ -186,8 +199,9 @@ for i_figure = 1:2
     xlim(the_xlim);
     ylim([0 1]);
     yticks([0:0.2:1])
-    label_legend(M);
-    print(['results/wc_coverage_' num2str(i_figure)],'-dpng');
+    label_axis(true)
+    label_legend(M,'M');
+    print(['results/wc_coverage_' num2str(i_figure)],'-depsc');
 
 end
 
@@ -215,8 +229,9 @@ for i_figure = 1:2
     xlim(the_xlim);
     ylim([0 2]);
     yticks([0:0.5:2])
-    label_legend(M);
-    print(['results/ba_rellength_' num2str(i_figure)],'-dpng');
+    label_axis(true)
+    label_legend(M,'M');
+    print(['results/ba_rellength_' num2str(i_figure)],'-depsc');
 
 end
 
@@ -242,8 +257,9 @@ for i_figure = 1:2
     xlim(the_xlim);
     ylim([0 1]);
     yticks([0:0.2:1])
-    label_legend(M);
-    print(['results/ba_lpoptweight_' num2str(i_figure)],'-dpng');
+    label_axis(true)
+    label_legend(M,'M');
+    print(['results/ba_lpoptweight_' num2str(i_figure)],'-depsc');
 
 end
 
@@ -269,8 +285,9 @@ for i_figure = 1:2
     xlim(the_xlim);
     ylim([0 1]);
     yticks([0:0.2:1])
-    label_legend(M);
-    print(['results/ba_optrellength_' num2str(i_figure)],'-dpng');
+    label_axis(true)
+    label_legend(M,'M');
+    print(['results/ba_optrellength_' num2str(i_figure)],'-depsc');
 
 end
 
@@ -295,18 +312,73 @@ for i_figure = 1:2
     xlim(the_xlim);
     ylim([0 1]);
     yticks([0:0.2:1])
-    label_legend();
-    print(['results/wc_joint_' num2str(i_figure)],'-dpng');
+    label_axis(true)
+    print(['results/wc_joint_' num2str(i_figure)],'-depsc');
 
 end
 
-%% PLOTTING FUNCTION
+%----------------------------------------------------------------
+% Worst-Case Coverage of Wald Confidence Ellipsoid
+%----------------------------------------------------------------
 
-function label_legend(varargin)
-    xlabel('$\sqrt{\mathrm{aVar}(\hat{\delta}_h)/\mathrm{aVar}(\hat{\beta}_h)}$','Interpreter','Latex');
-    set(gca,'FontSize',12);
-    if ~isempty(varargin)
-        legend(strcat('M=', arrayfun(@num2str, varargin{1}, 'UniformOutput', 0)),...
-            'Interpreter','latex','Location','SouthEast','FontSize',12);
+n_plot_k = length(plot_ellipse_k);
+
+figure('Units','inches','Position',plot_pos.*[1 1 1.5 1]);
+for i_k=1:n_plot_k
+    subplot(1,n_plot_k,i_k);
+    set(gca,'TickLabelInterpreter','latex')
+    hold on;
+    for i_M=1:n_M
+        plot(se_ratio,wc_prob_wald(i_M,:,plot_ellipse_k(i_k)),linestyles{i_M},'LineWidth',1);
     end
+    hold off;
+    the_xlim = xlim;
+    line(the_xlim,[1 1]*(1-signif),'Color','k','LineStyle','-'); % mark nominal coverage level on vertical axis
+    xlim(the_xlim);
+    ylim([0 1]);
+    label_axis(false);
+    title(sprintf('%s%d%s','$k=',k(plot_ellipse_k(i_k)),'$'),'Interpreter','Latex','FontSize',14);
+    if i_k==n_plot_k
+        label_legend(M,'M');
+    end
+end
+print('results/wc_coverage_wald_k','-depsc');
+
+n_plot_M = length(plot_ellipse_M);
+
+figure('Units','inches','Position',plot_pos.*[1 1 1.5 1]);
+for i_M=1:n_plot_M
+    subplot(1,n_plot_M,i_M);
+    set(gca,'TickLabelInterpreter','latex')
+    hold on;
+    for i_k=1:n_k
+        plot(se_ratio,wc_prob_wald(plot_ellipse_M(i_M),:,i_k),linestyles{i_k},'LineWidth',1);
+    end
+    hold off;
+    the_xlim = xlim;
+    line(the_xlim,[1 1]*(1-signif),'Color','k','LineStyle','-'); % mark nominal coverage level on vertical axis
+    xlim(the_xlim);
+    ylim([0 1]);
+    label_axis(false);
+    title(sprintf('%s%3.2g%s','$M=',M(plot_ellipse_M(i_M)),'$'),'Interpreter','Latex','FontSize',14);
+    if i_M==1
+        label_legend(k,'k');
+    end
+end
+print('results/wc_coverage_wald_M','-depsc');
+
+%% PLOTTING FUNCTIONS
+
+function label_axis(univariate)
+    if univariate
+        xlabel('$\sqrt{\mathrm{aVar}(\hat{\delta}_h)/\mathrm{aVar}(\hat{\beta}_h)}$','Interpreter','latex');
+    else
+        xlabel('$\sqrt{\lambda_{\mathrm{min}}(\mathrm{aVar}(\hat{\mbox{\boldmath$\delta$}})\mathrm{aVar}(\hat{\mbox{\boldmath$\beta$}})^{-1})}$','Interpreter','latex');
+    end
+    set(gca,'FontSize',12);
+end
+
+function label_legend(val,s)
+    legend(strcat(strcat(s,'='), arrayfun(@num2str, val, 'UniformOutput', 0)),...
+        'Interpreter','latex','Location','SouthEast','FontSize',12);
 end
