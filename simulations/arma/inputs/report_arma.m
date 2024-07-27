@@ -208,14 +208,20 @@ pos(1) = left_pos(i_p);
 pos(3) = plotwidth;
 set(gca,'Position', pos)
 hold on
-plot(1:1:maxhor_ma,dgps{indx_p(i_p),indx_theta(i_p)}.alpha_tilde(2:maxhor_ma+1),'-','Color',settings.colors.black,'LineWidth',4)
+plot(1:1:maxhor_ma,dgps{indx_p(i_p),indx_theta(i_p)}.alpha_tilde(2:maxhor_ma+1),'-','LineWidth',3)
 for i_h = 1:n_h
     plot(1:1:maxhor_ma,squeeze(dgps{indx_p(i_p),indx_theta(i_p)}.alpha_worst(2:maxhor_ma+1,1,1,h_plot_indx(i_h))),...
-        settings.line_specs{i_h},'Color',settings.colors.hor(i_h,:),'LineWidth',4)
+        settings.line_specs{i_h},'LineWidth',3)
 end
 hold on
 xlim([1,maxhor_ma])
-% ylim([-1 0.5])
+if i_p == 1
+    ylim([-0.25 0.5])
+    yticks([-0.25 0 0.25 0.5])
+elseif i_p == 2
+    ylim([-0.05 0.04])
+    yticks([-0.04 -0.02 0 0.02 0.04])
+end
 set(gcf,'color','w')
 title([' $p$ = ' num2str(settings.ps(indx_p(i_p)))],'interpreter','latex','fontsize',24)
 xlabel('$\ell$','interpreter','latex','FontSize',20)
@@ -232,4 +238,4 @@ end
 pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 2*pos(3) 1.1*pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
-print('figures/alpha_arma','-dpng');
+print('figures/alpha_arma','-depsc');
