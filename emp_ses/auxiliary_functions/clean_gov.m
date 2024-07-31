@@ -35,7 +35,7 @@ df.lrgov = log(df.rgov);
 df.lrtax = log(df.rfedreceipts);
 
 % estimate trend GDP for Gordon-Krenn normalization;
-controls         = [ones(height(df), 1), df.t, df.t2];
+controls  = [ones(height(df), 1), df.t, df.t2];
 df.lyquad = controls*inv(controls'*controls)*controls' * df.lrgdp;
 df.yquad  = exp(df.lyquad);
 

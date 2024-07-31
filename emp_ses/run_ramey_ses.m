@@ -118,32 +118,7 @@ for i_appl = 1:n_appl  % loop through applications
 
 end
 
+
 %% SAVE RESULTS
 
 save('results/res_application.mat', 'appl', '-v7.3')
-
-%% FIGURES
-
-%----------------------------------------------------------------
-% IRFs
-%----------------------------------------------------------------
-
-% normalizations from Ramey (2016)
-scale = {[100, 100, 1, 1]* 0.2567/4.255, ...  
-             [1, 1, 1], ...
-             [1,1,1]/max(appl(3).results.estims(2, strcmp(appl(3).data.yname, 'g'), :)), ...
-             ones(1,3)*100};
-
-for i_appl=1:n_appl
-    plot_irfs(appl(i_appl), scale{i_appl})
-    exportgraphics(gcf, ['figures/irfs_appl=' num2str(i_appl) '.eps'])
-    exportgraphics(gcf, 'figures/irfs_all.pdf', 'Append', i_appl > 1)  % single PDF document
-end
-
-%----------------------------------------------------------------
-% SEs
-%----------------------------------------------------------------
-
-plot_seratio(appl)
-exportgraphics(gcf, 'figures/seratio.eps')
-exportgraphics(gcf, 'figures/seratio.pdf')  

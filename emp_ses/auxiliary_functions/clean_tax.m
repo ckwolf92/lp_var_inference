@@ -13,7 +13,6 @@ df.rfedgov    = df.nfed./df.pgdp;             % real federal spending, using GDP
 df.taxy       = 100*df.nfedtaxrev./df.ngdp;   % average tax rate
 
 % create per capita log variables
-
 vars_lpc = {'rgdp', 'rcons', 'rinv', 'tothours', ...
             'rfedtaxrev', 'rgov', 'rfedgov'};
 for j = 1:length(vars_lpc)
@@ -21,13 +20,12 @@ for j = 1:length(vars_lpc)
 end
 
 % rename
-
 df = renamevars(df, strcat('l', {'rgdp', 'rcons', 'rinv',...
-                             'rfedtaxrev', 'rgov', 'rfedgov'}), ...
+                             'tothours', 'rfedtaxrev', 'rfedgov'}), ...
                 strcat('l', {'y', 'c', 'i', 'h', 'tax', 'g'}));
 
 % trends
-df.t = (1:height(df))';
+df.t  = (1:height(df))';
 df.t2 = df.t.^2;
 
 % Blanchard-Perotti dummy
@@ -42,8 +40,6 @@ df.dtaxy = [NaN; df.taxy(1:end-1)];
 df.dltax = [NaN; df.ltax(1:end-1)];
 
 % residualize a constant, time trend, and dummies
-df = df(2:end, :);
-
 control = [ones(size(df,1),1), df.t, df.t2, df.dum75q2];  % Control variables
 M       = eye(size(control,1)) - control*inv(control'*control)*control';  % annihilator
 y       = M*[df.lg df.ly, df.ltax];

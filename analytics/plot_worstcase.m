@@ -38,22 +38,22 @@ load res_application
 % select variables and horizons
 
 var_select = {[1 2 3 4]; ...
-                [1 2 3]; ...
-                [1 2 3]; ...
-                [1 2 3]; ...
-                [1 2 3 4]; ...
-                [1 2 3]; ...
-                [1 2 3]; ...
-                [1 2 3]};
+              [1 2 3]; ...
+              [1 2 3]; ...
+              [1 2 3]; ...
+              [1 2 3 4]; ...
+              [1 2 3]; ...
+              [1 2 3]; ...
+              [1 2 3]};
 
 hor_select = {[1:1:49]; ...
-                [1:1:21]; ...
-                [1:1:21]; ...
-                [1:1:21];...
-                [13:1:49]; ...
-                [5:1:21]; ...
-                [5:1:21]; ...
-                [5:1:21]};
+              [1:1:21]; ...
+              [1:1:21]; ...
+              [1:1:21];...
+              [13:1:49]; ...
+              [5:1:21]; ...
+              [5:1:21]; ...
+              [5:1:21]};
 
 n_appl = length(var_select);
 
@@ -182,26 +182,28 @@ ses_ub_2 = prctile(ses_all_2,90);
 for i_figure = 1:2
 
     figure('Units','inches','Position',plot_pos);
-    set(gca,'TickLabelInterpreter','latex')
+    set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
+
     hold on
+    handle = [];
     for i_M=1:n_M
-        plot(se_ratio,wc_cov(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
+        handle_i = plot(se_ratio,wc_cov(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
         hold on
+        handle = [handle handle_i];
     end
     if i_figure > 1
-        jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
+        p = jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
             settings.colors.lblue,settings.colors.lblue,0,0.5);
-        hold on
+        uistack(p, 'bottom')
     end
     the_xlim = [0 1];
     line(the_xlim,[1 1]*(1-signif),'Color','k','LineStyle','-');
-    hold on
     xlim(the_xlim);
     ylim([0 1]);
     yticks([0:0.2:1])
     label_axis(true)
-    label_legend(M,'M');
-    print(['results/wc_coverage_' num2str(i_figure)],'-depsc');
+    label_legend(M,'M', handle);
+    print(['results/wc_coverage_' num2str(i_figure)],'-depsc', '-vector');
 
 end
 
@@ -212,26 +214,27 @@ end
 for i_figure = 1:2
 
     figure('Units','inches','Position',plot_pos);
-    set(gca,'TickLabelInterpreter','latex')
+    set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
     hold on
+    handle = [];
     for i_M=1:n_M
-        plot(se_ratio,length_var_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
+        handle_i = plot(se_ratio,length_var_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
         hold on
+        handle = [handle handle_i];
     end
     if i_figure > 1
-        jbfill([ses_lb_2 ses_ub_2],[0 0],[2 2],...
+        p = jbfill([ses_lb_2 ses_ub_2],[0 0],[2 2],...
             settings.colors.lblue,settings.colors.lblue,0,0.5);
-        hold on
+        uistack(p, 'bottom')
     end
     the_xlim = [0 1];
     line(the_xlim,[1 1],'Color','k','LineStyle','-');
-    hold on
     xlim(the_xlim);
     ylim([0 2]);
     yticks([0:0.5:2])
     label_axis(true)
-    label_legend(M,'M');
-    print(['results/ba_rellength_' num2str(i_figure)],'-depsc');
+    label_legend(M,'M', handle);
+    print(['results/ba_rellength_' num2str(i_figure)],'-depsc', '-vector');
 
 end
 
@@ -242,24 +245,27 @@ end
 for i_figure = 1:2
 
     figure('Units','inches','Position',plot_pos);
-    set(gca,'TickLabelInterpreter','latex')
+    set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
     hold on
+    handle = [];
     for i_M=1:n_M
-        plot(se_ratio,weight_opt_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
+        handle_i = plot(se_ratio,weight_opt_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
         hold on
+        handle = [handle handle_i];
     end
     if i_figure > 1
-        jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
+        p = jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
             settings.colors.lblue,settings.colors.lblue,0,0.5);
         hold on
+        uistack(p, 'bottom')
     end
     the_xlim = [0 1];
     xlim(the_xlim);
     ylim([0 1]);
     yticks([0:0.2:1])
     label_axis(true)
-    label_legend(M,'M');
-    print(['results/ba_lpoptweight_' num2str(i_figure)],'-depsc');
+    label_legend(M,'M', handle);
+    print(['results/ba_lpoptweight_' num2str(i_figure)],'-depsc', '-vector');
 
 end
 
@@ -270,24 +276,27 @@ end
 for i_figure = 1:2
 
     figure('Units','inches','Position',plot_pos);
-    set(gca,'TickLabelInterpreter','latex')
+    set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
     hold on
+    handle = [];
+
     for i_M=1:n_M
-        plot(se_ratio,length_opt_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
+        handle_i = plot(se_ratio,length_opt_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
         hold on
+        handle = [handle handle_i];
     end
     if i_figure > 1
-        jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
+        p = jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
             settings.colors.lblue,settings.colors.lblue,0,0.5);
-        hold on
+        uistack(p, 'bottom')
     end
     the_xlim = [0 1];
     xlim(the_xlim);
     ylim([0 1]);
     yticks([0:0.2:1])
     label_axis(true)
-    label_legend(M,'M');
-    print(['results/ba_optrellength_' num2str(i_figure)],'-depsc');
+    label_legend(M,'M', handle);
+    print(['results/ba_optrellength_' num2str(i_figure)],'-depsc', '-vector');
 
 end
 
@@ -298,11 +307,13 @@ end
 for i_figure = 1:2
 
     figure('Units','inches','Position',plot_pos);
-    set(gca,'TickLabelInterpreter','latex')
+    set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
+
     hold on
     if i_figure > 1
-        jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
+        p = jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
             settings.colors.lblue,settings.colors.lblue,0,0.5);
+        uistack(p, 'bottom')
         hold on
     end
     plot(se_ratio,wc_prob,'Color','k','LineWidth',2);
@@ -313,7 +324,7 @@ for i_figure = 1:2
     ylim([0 1]);
     yticks([0:0.2:1])
     label_axis(true)
-    print(['results/wc_joint_' num2str(i_figure)],'-depsc');
+    print(['results/wc_joint_' num2str(i_figure)],'-depsc', '-vector');
 
 end
 
@@ -342,7 +353,7 @@ for i_k=1:n_plot_k
         label_legend(M,'M');
     end
 end
-print('results/wc_coverage_wald_k','-depsc');
+print('results/wc_coverage_wald_k','-depsc', '-vector');
 
 n_plot_M = length(plot_ellipse_M);
 
@@ -365,20 +376,25 @@ for i_M=1:n_plot_M
         label_legend(k,'k');
     end
 end
-print('results/wc_coverage_wald_M','-depsc');
+print('results/wc_coverage_wald_M','-depsc', '-vector');
 
 %% PLOTTING FUNCTIONS
 
 function label_axis(univariate)
-    if univariate
-        xlabel('$\sqrt{\mathrm{aVar}(\hat{\delta}_h)/\mathrm{aVar}(\hat{\beta}_h)}$','Interpreter','latex');
-    else
-        xlabel('$\sqrt{\lambda_{\mathrm{min}}(\mathrm{aVar}(\hat{\mbox{\boldmath$\delta$}})\mathrm{aVar}(\hat{\mbox{\boldmath$\beta$}})^{-1})}$','Interpreter','latex');
-    end
-    set(gca,'FontSize',12);
+if univariate
+    xlabel('$\sqrt{\mathrm{aVar}(\hat{\delta}_h)/\mathrm{aVar}(\hat{\beta}_h)}$','Interpreter','latex');
+else
+    xlabel('$\sqrt{\lambda_{\mathrm{min}}(\mathrm{aVar}(\hat{\mbox{\boldmath$\delta$}})\mathrm{aVar}(\hat{\mbox{\boldmath$\beta$}})^{-1})}$','Interpreter','latex');
+end
+set(gca,'FontSize',12);
 end
 
-function label_legend(val,s)
-    legend(strcat(strcat(s,'='), arrayfun(@num2str, val, 'UniformOutput', 0)),...
-        'Interpreter','latex','Location','SouthEast','FontSize',12);
+function label_legend(val,s, handle)
+arguments
+    val
+    s
+    handle = []
+end
+legend(handle, strcat(strcat(s,'='), arrayfun(@num2str, val, 'UniformOutput', 0)),...
+    'Interpreter','latex','Location','SouthEast','FontSize',12);
 end

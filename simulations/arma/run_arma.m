@@ -11,6 +11,9 @@ warning('off','MATLAB:dispatcher:nameConflict')
 addpath(genpath('../../functions'))
 addpath(genpath('../auxiliary_functions'))
 
+% Get DGP
+cd inputs/; run('get_arma.m'); cd ..; clear;
+
 %% SETUP
 
 %--------------------------------------------------------------------------

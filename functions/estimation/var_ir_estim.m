@@ -1,5 +1,5 @@
 function [irs, irs_varcov, Ahat_estim, Sigmahat_estim, res_estim] ...
-            = var_ir_estim(Y, p, horzs, bias_corr, homosk, no_const, df_override)
+            = var_ir_estim(Y, p, horzs, bias_corr, homosk, no_const, T_eff)
     arguments
         Y
         p
@@ -7,7 +7,7 @@ function [irs, irs_varcov, Ahat_estim, Sigmahat_estim, res_estim] ...
         bias_corr
         homosk
         no_const
-        df_override = []
+        T_eff = []
     end
     % VAR(p) least-squares estimates and delta method s.e.
     
@@ -18,7 +18,7 @@ function [irs, irs_varcov, Ahat_estim, Sigmahat_estim, res_estim] ...
     % bias_corr   bool    true: apply analytical bias correction (Pope, 1990)
     % homosk      bool    true: homoskedastic s.e., false: EHW s.e.
     % no_const    bool    true: omit intercept
-    % df_override scalar  Manually override the VAR degree of freedom adjustments (=[] if no override).
+    % T_eff       scalar  Specify effective sample size. (=[] for default).
 
     % Outputs:
     % irs            n x n x H           estimated impulse responses Theta_h at select horizons
@@ -31,7 +31,7 @@ function [irs, irs_varcov, Ahat_estim, Sigmahat_estim, res_estim] ...
     
     % One-step forecasting regression of Y_{t+1} on (Y_t, ..., Y_{t-p+1})
     [Ahat_estim, Ahat_estim_varcov, Sigmahat_estim, Sigmahat_estim_varcov, res_estim] ...
-        = var_estim(Y, p, homosk, no_const, df_override);
+        = var_estim(Y, p, homosk, no_const, T_eff);
     
     % Bias correction, if desired
     if bias_corr

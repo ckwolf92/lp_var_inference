@@ -32,10 +32,10 @@ numproc = length(proc_names); % number of inference procedures
 % set-up
 if contains(dgp_type, 'varma')
     status        = mkdir(['figures/', scheme]);
-    save_filename = fullfile('figures/',scheme, '/', dgp_type); % first part of file name for saved figures
+    save_filename = fullfile('figures', scheme, dgp_type); % first part of file name for saved figures
 elseif contains(dgp_type, 'arma') 
     status        = mkdir(['figures/']);
-    save_filename = fullfile('figures/', dgp_type); % first part of file name for saved figures
+    save_filename = fullfile('figures', dgp_type); % first part of file name for saved figures
 end
 
 

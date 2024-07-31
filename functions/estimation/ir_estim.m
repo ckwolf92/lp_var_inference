@@ -45,7 +45,7 @@ function [irs, ses, cis_dm, cis_boot, ses_bootstrap] = ir_estim(Y, p, horzs, var
         % Bootstrap iterations (default: 1000)
     addParameter(ip, 'boot_workers', 0, @isnumeric);
         % Number of parallel workers used for bootstrapping (default: 0, meaning no parallel computation)
-    addParameter(ip, 'var_df_override', true, @islogical)
+    addParameter(ip, 'var_df_harmonize', true, @islogical)
         % Match VAR degrees of freedom with LP? (default: yes)
     parse(ip, Y, p, horzs, varargin{:});
     
@@ -73,10 +73,10 @@ function [irs, ses, cis_dm, cis_boot, ses_bootstrap] = ir_estim(Y, p, horzs, var
     
     if strcmp(ip.Results.estimator, 'var') % VAR
         
-        if ip.Results.var_df_override
-            df_override = (T - p) - ip.Results.innov_ind - n*p;  % LP estimation sample length (T-p) minus # LP covariates for h=0
+        if ip.Results.var_df_harmonize
+            T_eff = (T-p) - ip.Results.innov_ind - n*p + (ip.Results.no_const-1);  % LP estimation sample length (T-p) minus # LP covariates for h=0
         else
-            df_override = [];
+            T_eff = [];
         end
 
         % VAR impulse responses
@@ -85,7 +85,7 @@ function [irs, ses, cis_dm, cis_boot, ses_bootstrap] = ir_estim(Y, p, horzs, var
                                                  horzs, ...
                                                  ip.Results.bias_corr,...
                                                  ip.Results.se_homosk,...
-                                                 ip.Results.no_const, df_override);
+                                                 ip.Results.no_const, T_eff);
         
         % Impulse responses of interest and s.e.
         [irs, ses] = var_select(irs_all, irs_all_varcov, ip.Results.resp_ind, nu);

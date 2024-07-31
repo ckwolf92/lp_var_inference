@@ -8,7 +8,7 @@ keep    = find(year(df.date)==1949 & month(df.date)==6):...
          find(year(df.date) == 2009 & month(df.date) == 12);
 df = df(keep, :);
 
-df.t = (1:height(df))';
+df.t  = (1:height(df))';
 df.t2 = df.t.^2;
 
 df.xtot    = df.rgdp     ./ df.tothours;

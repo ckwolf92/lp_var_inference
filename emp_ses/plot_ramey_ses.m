@@ -59,8 +59,7 @@ end
 %% PLOT
 
 figure('Units','inches','Position',[2, 2, 8, 4]);
-set(gca,'TickLabelInterpreter','latex')
-set(gca,'FontSize',12);
+set(gca,'TickLabelInterpreter','latex', 'FontSize', 12);
 grid on
 hold on
 scatter(4*[0.5:0.5:4], se_ratio_grouped(:,2), 'k', 'filled', 'Marker','square')  % Plot center
