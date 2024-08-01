@@ -63,10 +63,6 @@ function [irs, ses, cis_dm, cis_boot, ses_bootstrap] = ir_estim(Y, p, horzs, var
 
     cis_boot ...
       = nan(2,nh,3);       % Initializes NaN array
-  
-    % Set shock vector
-    the_eye = eye(n);
-    nu = the_eye(:,ip.Results.innov_ind);
     
     
     %% Point estimates and var-cov
@@ -81,14 +77,17 @@ function [irs, ses, cis_dm, cis_boot, ses_bootstrap] = ir_estim(Y, p, horzs, var
 
         % VAR impulse responses
         [irs_all, irs_all_varcov] = var_ir_estim(Y, ...
+                                                 ip.Results.innov_ind, ...
                                                  p,...
                                                  horzs, ...
                                                  ip.Results.bias_corr,...
                                                  ip.Results.se_homosk,...
-                                                 ip.Results.no_const, T_eff);
+                                                 ip.Results.no_const, ...
+                                                 T_eff);
         
         % Impulse responses of interest and s.e.
-        [irs, ses] = var_select(irs_all, irs_all_varcov, ip.Results.resp_ind, nu);
+        irs = irs_all(ip.Results.resp_ind,:);
+        ses = sqrt(reshape(irs_all_varcov(ip.Results.resp_ind,ip.Results.resp_ind,:),1,[]));
         
     elseif strcmp(ip.Results.estimator, 'lp') % LP
         
@@ -147,13 +146,14 @@ function [irs, ses, cis_dm, cis_boot, ses_bootstrap] = ir_estim(Y, p, horzs, var
         % VAR coefficient estimates that define bootstrap DGP
         
         [irs_var, ~, Ahat_var, ~, res_var] = var_ir_estim(Y, ...
+                                              ip.Results.innov_ind, ...
                                               p,...
                                               horzs, ...
                                               ip.Results.bias_corr,...
                                               ip.Results.se_homosk,...
                                               ip.Results.no_const);
         
-        pseudo_truth = var_select(irs_var, [], ip.Results.resp_ind, nu); % Pseudo-true impulse responses in bootstrap DGP
+        pseudo_truth = irs_var(ip.Results.resp_ind,:); % Pseudo-true impulse responses in bootstrap DGP
 
         parfor(b=1:ip.Results.boot_num, ip.Results.boot_workers)
 
