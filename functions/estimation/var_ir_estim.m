@@ -1,15 +1,6 @@
 function [irs, irs_varcov, Ahat_estim, Sigmahat_estim, res_estim] ...
-            = var_ir_estim(Y, innov_ind, p, horzs, bias_corr, homosk, no_const, T_eff)
-    arguments
-        Y
-        innov_ind
-        p
-        horzs
-        bias_corr
-        homosk
-        no_const
-        T_eff = []
-    end
+            = var_ir_estim(Y, innov_ind, p, horzs, bias_corr, homosk, no_const)
+    
     % SVAR(p) least-squares estimates and delta method s.e.
     % Cholesky identification
     
@@ -50,11 +41,8 @@ function [irs, irs_varcov, Ahat_estim, Sigmahat_estim, res_estim] ...
     nu = coef(:,innov_ind);
     nu_varcov = coef_varcov(end-n+1:end,end-n+1:end);
 
-    % Degrees of freedom corrections
-    if ~isempty(T_eff)
-        Ahat_varcov = Ahat_varcov*(size(res_estim,1)-size(Ahat_estim,2))/T_eff;
-        nu_varcov = nu_varcov*(size(res_estim,1)-innov_ind)/T_eff;
-    end
+    % Degrees-of-freedom correction to account for additional controls in original VAR regression
+    nu_varcov = nu_varcov*(size(res_estim,1)-innov_ind)/(size(res_estim,1)-size(Ahat_estim,2)-innov_ind);
     
     if nargout==1
         irs = var_ir(Ahat,nu,horzs); % Compute impulse responses

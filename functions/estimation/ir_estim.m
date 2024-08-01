@@ -40,19 +40,15 @@ function [irs, ses, cis_dm, cis_boot, ses_bootstrap] = ir_estim(Y, p, horzs, var
     addParameter(ip, 'no_const', false, @islogical);
         % Omit intercept? (default: no)
     addParameter(ip, 'bootstrap', [], @(x) ischar(x) || isempty(x));
-        % Bootstrap type, either 'var', 'resid', or 'pair'; empty if delta method (default: delta method)
+        % Bootstrap type, either 'var' or empty if delta method (default: delta method)
     addParameter(ip, 'boot_num', 1000, @isnumeric);
         % Bootstrap iterations (default: 1000)
     addParameter(ip, 'boot_workers', 0, @isnumeric);
         % Number of parallel workers used for bootstrapping (default: 0, meaning no parallel computation)
-    addParameter(ip, 'var_df_harmonize', true, @islogical)
-        % Match VAR degrees of freedom with LP? (default: yes)
     parse(ip, Y, p, horzs, varargin{:});
     
     
     %% Preliminaries
-    
-    [T,n] = size(Y);              % Dimensions
     
     nh ...
       = length(horzs); % Number of horizons
@@ -69,12 +65,6 @@ function [irs, ses, cis_dm, cis_boot, ses_bootstrap] = ir_estim(Y, p, horzs, var
     
     if strcmp(ip.Results.estimator, 'var') % VAR
         
-        if ip.Results.var_df_harmonize
-            T_eff = (T-p) - ip.Results.innov_ind - n*p + (ip.Results.no_const-1);  % LP estimation sample length (T-p) minus # LP covariates for h=0
-        else
-            T_eff = [];
-        end
-
         % VAR impulse responses
         [irs_all, irs_all_varcov] = var_ir_estim(Y, ...
                                                  ip.Results.innov_ind, ...
@@ -82,8 +72,7 @@ function [irs, ses, cis_dm, cis_boot, ses_bootstrap] = ir_estim(Y, p, horzs, var
                                                  horzs, ...
                                                  ip.Results.bias_corr,...
                                                  ip.Results.se_homosk,...
-                                                 ip.Results.no_const, ...
-                                                 T_eff);
+                                                 ip.Results.no_const);
         
         % Impulse responses of interest and s.e.
         irs = irs_all(ip.Results.resp_ind,:);
