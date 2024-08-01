@@ -397,6 +397,6 @@ arguments
     s
     handle = []
 end
-legend(handle, strcat(strcat(s,'='), arrayfun(@num2str, val, 'UniformOutput', 0)),...
+legend(handle, strcat('$', strcat(s,'='), arrayfun(@num2str, val, 'UniformOutput', 0), '$'),...
     'Interpreter','latex','Location','SouthEast','FontSize',12);
 end
