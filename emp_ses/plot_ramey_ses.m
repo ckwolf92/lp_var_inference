@@ -8,8 +8,6 @@ clear
 clc
 close all
 
-addpath('auxiliary_functions/')
-addpath(genpath('../functions'))
 addpath('results')
 
 %% PREPARATIONS

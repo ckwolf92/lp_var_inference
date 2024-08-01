@@ -7,8 +7,7 @@
 clc
 clear all
 close all
-addpath(genpath('../../functions'))
-addpath(genpath('../../auxiliary_functions'))
+addpath(genpath(fullfile('..','auxiliary_functions')))
 warning('off','MATLAB:dispatcher:nameConflict')
 
 %% SETTINGS

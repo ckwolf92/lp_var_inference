@@ -8,8 +8,8 @@ clear
 clc
 close all
 
-addpath(genpath('../functions'))
-addpath(genpath('../emp_ses'))
+addpath('auxiliary_functions')
+addpath(fullfile('..','emp_ses','results'))
 
 %% SETTINGS
 
@@ -174,6 +174,8 @@ ses_lb_2 = prctile(ses_all_2,10);
 ses_ub_2 = prctile(ses_all_2,90);
 
 %% PLOT RESULTS
+
+mkdir('results');
 
 %----------------------------------------------------------------
 % Worst-Case Coverage of VAR CI

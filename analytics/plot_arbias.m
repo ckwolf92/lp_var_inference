@@ -8,8 +8,6 @@ clear
 clc
 close all
 
-addpath(genpath('../functions'))
-
 %% COMPUTATIONS
 
 % model parameters
@@ -120,4 +118,5 @@ end
 pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 2.4*pos(3) pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
+mkdir('results');
 print('results/ar_bias','-depsc');
