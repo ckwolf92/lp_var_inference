@@ -33,7 +33,7 @@ Tested in: MATLAB R2023b on Macbook Pro 2023 (M3 Pro)
 
 To replicate the figures for the worst-case analytical results, first run [run_ramey_ses.m](emp_ses/run_ramey_ses.m) to generate the empirical LP and VAR standard errors, and then run [plot_worstcase.m](analytics/plot_worstcase.m) to get the figures. For the least favorable misspecification in the AR(1) case run [plot_arbias.m](analytics/plot_arbias.m).
 
-To replicate the main simulation results reported in the paper it is always necessary to proceed in two steps: first, run the simulations (e.g., [run_arma.m](simulations/arma/run_arma.m)); and second, generate the figures (e.g., [figures_arma.m](simulations/arma/figures_arma.m)). Supplementary results for the total amount of misspecification are also generated in the inputs subfolder (e.g., [report_arma.m](simulations/arma/inputs/report_arma.m)).
+To replicate the main simulation results reported in the paper it is always necessary to proceed in two steps: first, run the simulations (e.g., [run_arma.m](simulations/arma/run_arma.m)); and second, generate the figures (e.g., [figures_arma.m](simulations/arma/figures_arma.m)). Supplementary results for the total amount of misspecification are generated in the inputs subfolder (e.g., [report_arma.m](simulations/arma/inputs/report_arma.m)).
 
 Detailed instructions for the main text figures and tables follow.
 
