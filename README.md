@@ -15,7 +15,7 @@ Tested in: MATLAB R2023b on Macbook Pro 2023 (M3 Pro)
 
 **[analytics](analytics):** Figures for analytical results
 - [plot_arbias.m](analytics/plot_arbias.m): Plot the least-favorable MA polynomial for the local-to-AR(1) model
-- [plot_worstcase.m](analytics/plot_worstcase.m): Generate the various worst-case figures
+- [plot_worstcase.m](analytics/plot_worstcase.m): Generate the various analytical worst-case figures
 
 **[emp_ses](emp_ses):** Compute empirical standard error ratios based on Ramey (2016)
 - [run_ramey_ses.m](emp_ses/run_ramey_ses.m): Compute LP and VAR SEs
