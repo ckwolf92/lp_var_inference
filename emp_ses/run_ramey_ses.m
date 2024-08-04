@@ -118,7 +118,6 @@ for i_appl = 1:n_appl  % loop through applications
 
 end
 
-
 %% SAVE RESULTS
 
 mkdir('results');

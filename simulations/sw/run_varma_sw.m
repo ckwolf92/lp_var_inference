@@ -11,7 +11,6 @@ warning('off','MATLAB:dispatcher:nameConflict')
 addpath(fullfile('..','..','estimation'))
 addpath(genpath(fullfile('..','auxiliary_functions')))
 
-
 %% SETUP
 
 %----------------------------------------------------------------
