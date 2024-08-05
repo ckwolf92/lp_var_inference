@@ -8,8 +8,8 @@ clear
 clc
 close all
 
-addpath('auxiliary_functions/')
-addpath(genpath('../functions'))
+addpath('auxiliary_functions')
+addpath(fullfile('..','estimation'))
 
 %% ESTIMATION SETTINGS
 
@@ -118,7 +118,7 @@ for i_appl = 1:n_appl  % loop through applications
 
 end
 
-
 %% SAVE RESULTS
 
+mkdir('results');
 save('results/res_application.mat', 'appl', '-v7.3')

@@ -1,23 +1,7 @@
 %% GET POPULATION VARMA(p,infty) AS DGP
 % this version: 05/21/2024
 
-%% HOUSEKEEPING
-
-clear
-clc
-close all
-warning('off','MATLAB:dispatcher:nameConflict')
-addpath(genpath('../../auxiliary_functions'))
-addpath(genpath('../../../functions'))
-
 %% SETTINGS
-
-%----------------------------------------------------------------
-% Set Identification Scheme
-%----------------------------------------------------------------
-
-scheme = 'lshock';  % mpshock, lshock, or mprecursive
-sim_setscheme_sw
 
 %----------------------------------------------------------------
 % Lag Lengths

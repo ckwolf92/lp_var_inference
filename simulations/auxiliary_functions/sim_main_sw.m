@@ -1,6 +1,5 @@
 % Run specifications for the Smets-Wouters exercises
 
-
 for jSpec = 1:length(Specifications)
 
     % Setup

@@ -8,8 +8,6 @@ clear
 clc
 close all
 
-addpath('auxiliary_functions/')
-addpath(genpath('../functions'))
 addpath('results')
 
 %% PREPARATIONS
@@ -73,4 +71,3 @@ xticks([2:2:16])
 xticklabels({'2', '4', '6', '8', '10', '12', '14', '16+'})
 xlabel('Horizon (quarters)', 'Interpreter', 'latex')
 ylim([0 1.1])
-print('results/ses_emp','-depsc');

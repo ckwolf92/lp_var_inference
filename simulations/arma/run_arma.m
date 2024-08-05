@@ -8,8 +8,8 @@ clc
 clear
 close all
 warning('off','MATLAB:dispatcher:nameConflict')
-addpath(genpath('../../functions'))
-addpath(genpath('../auxiliary_functions'))
+addpath(fullfile('..','..','estimation'))
+addpath(genpath(fullfile('..','auxiliary_functions')))
 
 % Get DGP
 cd inputs/; run('get_arma.m'); cd ..; clear;

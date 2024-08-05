@@ -8,11 +8,8 @@ clc
 clear
 close all
 warning('off','MATLAB:dispatcher:nameConflict')
-addpath(genpath('../../functions'))
-addpath(genpath('../auxiliary_functions'))
-
-% Get DGP
-cd inputs/; run('get_varma_sw.m'); cd ..; clear;
+addpath(fullfile('..','..','estimation'))
+addpath(genpath(fullfile('..','auxiliary_functions')))
 
 %% SETUP
 
@@ -22,6 +19,8 @@ cd inputs/; run('get_varma_sw.m'); cd ..; clear;
 
 scheme = 'lshock';  % mpshock, lshock, or mprecursive
 sim_setscheme_sw
+cd inputs/; run('get_varma_sw.m'); cd ..;  % Get DGP 
+clearvars -except scheme resp_ind innov_ind horzs SW_model_obs;
 
 %--------------------------------------------------------------------------
 % Specifications

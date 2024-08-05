@@ -8,8 +8,8 @@ clear
 clc
 close all
 
-addpath(genpath('../functions'))
-addpath(genpath('../emp_ses'))
+addpath('auxiliary_functions')
+addpath(fullfile('..','emp_ses','results'))
 
 %% SETTINGS
 
@@ -174,6 +174,8 @@ ses_lb_2 = prctile(ses_all_2,10);
 ses_ub_2 = prctile(ses_all_2,90);
 
 %% PLOT RESULTS
+
+mkdir('results');
 
 %----------------------------------------------------------------
 % Worst-Case Coverage of VAR CI
@@ -340,7 +342,7 @@ for i_k=1:n_plot_k
     set(gca,'TickLabelInterpreter','latex')
     hold on;
     for i_M=1:n_M
-        plot(se_ratio,wc_prob_wald(i_M,:,plot_ellipse_k(i_k)),linestyles{i_M},'LineWidth',1);
+        plot(se_ratio,wc_prob_wald(i_M,:,plot_ellipse_k(i_k)),linestyles{i_M},'LineWidth',1,'Color','k');
     end
     hold off;
     the_xlim = xlim;
@@ -363,7 +365,7 @@ for i_M=1:n_plot_M
     set(gca,'TickLabelInterpreter','latex')
     hold on;
     for i_k=1:n_k
-        plot(se_ratio,wc_prob_wald(plot_ellipse_M(i_M),:,i_k),linestyles{i_k},'LineWidth',1);
+        plot(se_ratio,wc_prob_wald(plot_ellipse_M(i_M),:,i_k),linestyles{i_k},'LineWidth',1,'Color','k');
     end
     hold off;
     the_xlim = xlim;
