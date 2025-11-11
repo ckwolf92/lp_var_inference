@@ -24,9 +24,11 @@ Tested in: MATLAB R2025b on Macbook Pro 2023 (M3 Pro)
 **[estimation](estimation):** Functions for LP and VAR estimation and inference
 - [ir_estim.m](estimation/ir_estim.m): Main function for estimates and confidence intervals
 
-**[simulations](simulations):** Simulation studies
-- [sw](simulations/sw): Map Smets-Wouters model into local-to-VAR representation ([get_varma_sw.m](simulations/sw/inputs/get_varma_sw.m), [report_varma_sw.m](simulations/sw/inputs/report_varma_sw.m)) + run simulations ([run_varma_sw.m](simulations/sw/run_varma_sw.m)) + generate figures ([figures_varma_sw.m](simulations/sw/figures_varma_sw.m)), for three different variable selections and identification schemes
+**[simulations](simulations):** Simulation study
 - [auxiliary_functions](simulations/auxiliary_functions): Auxiliary simulation-specific routines
+- [data](simulations/data): Data from the oil shock application of [Känzig (2020)](https://www.aeaweb.org/articles?id=10.1257/aer.20190964)
+- [oil](simulations/oil): Maps oil VAR with 18 lags into a local-to-VAR representation ([gen_varma_oil.m](simulations/oil/gen_varma_oil.m)) + run simulations ([simul_oil.m](simulations/oil/simul_oil.m)) + generate figures ([plot_oil.m](simulations/oil/plot_oil.m) and [plot_oil_rmse.m](simulations/oil/plot_oil_rmse.m))
+
 
 ## Detailed replication instructions
 
