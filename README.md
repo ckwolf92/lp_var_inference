@@ -9,9 +9,8 @@ Tested in: MATLAB R2025b on Macbook Pro 2023 (M3 Pro)
 
 ## Contents
 
-**[documents](documents):** Paper and supplement
-- [lp_varithmetic.pdf](documents/lp_varithmetic.pdf): Main paper
-- [lp_varithmetic_supplement.pdf](documents/lp_varithmetic_supplement.pdf): Online supplement
+**[documents](documents):** Replication materials
+- [lp_varithmetic_replication.pdf](lp_varithmetic_replication.pdf): Supplementary material for replication of our empirical literature surveys
 
 **[analytics](analytics):** Figures for analytical results
 - [plot_arbias.m](analytics/plot_arbias.m): Plot the least-favorable MA polynomial for the local-to-AR(1) model
