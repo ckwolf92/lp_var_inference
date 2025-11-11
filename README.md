@@ -3,7 +3,7 @@
 MATLAB code for inference on impulse responses using Local Projections or VARs.
 
 **Reference:**
-[Montiel Olea, José Luis](https://www.joseluismontielolea.com), [Mikkel Plagborg-Møller](https://www.mikkelpm.com), [Eric Qian](https://www.eric-qian.com) and [Christian K. Wolf](https://www.christiankwolf.com/) (2024), "Double Robustness of Local Projections and Some Unpleasant VARithmetic"
+[Montiel Olea, José Luis](https://www.joseluismontielolea.com), [Mikkel Plagborg-Møller](https://www.mikkelpm.com), [Eric Qian](https://www.eric-qian.com) and [Christian K. Wolf](https://www.christiankwolf.com/) (2025), "Double Robustness of Local Projections and Some Unpleasant VARithmetic"
 
 Tested in: MATLAB R2025b on Macbook Pro 2023 (M3 Pro)
 
