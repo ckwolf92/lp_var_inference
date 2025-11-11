@@ -4,7 +4,7 @@ function [betahat, varcov, res, X_expand] = linreg(Y, X, se_setting, no_const)
     % Y_t = beta*X_t + epsilon_t
     % dim(Y_t) = n, dim(beta) = n x k
     
-    % Intputs:
+    % Inputs:
     % Y         T x n   dependent variable data matrix
     % X         T x k   covariate data matrix
     % se_setting        EITHER bool: if true, homoskedastic s.e.; if false, EHW s.e.

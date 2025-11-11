@@ -1,11 +1,10 @@
-function [VMA,VARMA] = getresidVMA(VAR_infty,VAR_p,model,settings)
+function [VMA,VARMA] = getresidVMA(VAR_pop,VAR_p,settings)
 
     % Get Residual VMA Process
     
     % Inputs:
-    % VAR_infty struct          VAR(\infty) representation
-    % VAR_p     struct          VAR(p) representation
-    % model     struct          ABCD representation of DGP
+    % VAR_pop   struct          true population VAR(p*)
+    % VAR_p     struct          mis-specified VAR(p)
     % settings  struct          estimation settings
     
     % Outputs:
@@ -17,7 +16,7 @@ function [VMA,VARMA] = getresidVMA(VAR_infty,VAR_p,model,settings)
     % Preparations
     %----------------------------------------------------------------
     
-    n_y           = model.n_y;
+    n_y           = size(VAR_pop.Sigma_u,1);
     VMA_hor       = settings.VMA_hor;
     VAR_laglength = settings.VAR_estimlaglength;
     
@@ -29,7 +28,7 @@ function [VMA,VARMA] = getresidVMA(VAR_infty,VAR_p,model,settings)
     
     for l = 1:VMA_hor
         for q = 0:min(l-1,VAR_laglength)
-            IRF_Wold(:,:,l) = IRF_Wold(:,:,l) + VAR_p.A(:,:,q+1)' * squeeze(VAR_infty.IRF_Wold(l-q,:,:));
+            IRF_Wold(:,:,l) = IRF_Wold(:,:,l) + VAR_p.A(:,:,q+1)' * squeeze(VAR_pop.IRF_Wold(l-q,:,:));
         end
     end
     

@@ -1,11 +1,10 @@
-function dgp = dgp_fn(VAR_p,VMA,model,settings);
+function dgp = dgp_fn(VAR_p,VMA,settings);
 
     % Get DGP for Simulations
     
     % Inputs:
     % VAR_p     struct          population VAR(p)
     % VMA       struct          residual VMA process
-    % model     struct          ABCD representation of DGP
     % settings  struct          estimation settings
     
     % Output:
@@ -14,19 +13,23 @@ function dgp = dgp_fn(VAR_p,VMA,model,settings);
     %----------------------------------------------------------------
     % Parameterization
     %----------------------------------------------------------------
+
+    % system size
+
+    n_y = size(VAR_p.Sigma_u,1);
     
     % autoregressive
     
-    dgp.A  = VAR_p.VAR_coeff;
+    dgp.A  = VAR_p.VAR_coeff(1:end-1,:);
     dgp.HD = chol(squeeze(VMA.IRF_Wold(1,:,:)) * squeeze(VMA.IRF_Wold(1,:,:))','lower');
-    dgp.H  = zeros(model.n_y,model.n_y);
-    dgp.D  = zeros(model.n_y,model.n_y);
-    for i_y = 1:model.n_y
+    dgp.H  = zeros(n_y,n_y);
+    dgp.D  = zeros(n_y,n_y);
+    for i_y = 1:n_y
         dgp.H(:,i_y)   = dgp.HD(:,i_y) / dgp.HD(i_y,i_y);
         dgp.D(i_y,i_y) = dgp.HD(i_y,i_y)^2;
     end
     
-    dgp.alpha_tilde = zeros(settings.VMA_hor,model.n_y,model.n_y);
+    dgp.alpha_tilde = zeros(settings.VMA_hor,n_y,n_y);
     for i_l = 1:settings.VMA_hor
         dgp.alpha_tilde(i_l,:,:) = dgp.H^(-1) * squeeze(VMA.IRF_Wold(i_l,:,:)) * squeeze(VMA.IRF_Wold(1,:,:))^(-1) * dgp.H;
     end

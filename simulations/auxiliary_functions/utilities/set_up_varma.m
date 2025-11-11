@@ -34,6 +34,5 @@
     % IRFs
     
     dgp.irs_true(i_dgp,:)        = compute_irfs(dgp,settings);
-    dgp.var_asymp_covg(i_dgp, :) = get_asymp_var_covg(dgp, horzs, settings.est.resp_ind, ...
+    dgp.var_asymp_covg(i_dgp, :) = get_asymp_var_covg(dgp, settings.est.horzs, settings.est.resp_ind, ...
         settings.est.innov_ind, settings.est.alpha);
-
