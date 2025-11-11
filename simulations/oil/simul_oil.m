@@ -21,9 +21,8 @@ mkdir('results/')
 % Experiment and bootstrap settings
 %----------------------------------------------------------------
 
-exp_id = 1;  % 1 is baseline p, 2 is AIC p
-boot   = false;  
-
+exp_id = 1;  % 1 is fixed p, 2 is AIC p
+boot   = false;
 
 %% SETTINGS
 
@@ -39,8 +38,6 @@ load oil_dgps
 
 dgp      = struct;
 settings = struct;
-
-
 
 if exp_id == 1
     
@@ -65,7 +62,6 @@ elseif exp_id == 2
     
     settings.est.p_select  = 1;                % use information criterion to select lag length? (1 for AIC, 2 for BIC)
     settings.p_max         = 24;               % maximal lag length to consider
-
 
 end
 

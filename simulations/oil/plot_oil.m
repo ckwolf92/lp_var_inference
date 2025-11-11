@@ -17,13 +17,41 @@ addpath(genpath('../data'))
 addpath('../../estimation')
 addpath('results/')
 
-%% LOAD RESULTS
+%% GET RESULTS
 
-exp_id = 1; % 1 is baseline p, 2 is AIC p
+%----------------------------------------------------------------
+% Load
+%----------------------------------------------------------------
+
+exp_id = 1; % 1 is fixed p, 2 is AIC p
 
 load(['sim_', num2str(exp_id)])
 
+%----------------------------------------------------------------
+% Bias, Variance, MSE
+%----------------------------------------------------------------
+
+% bias squared
+
+irs_true_reshape = permute(dgp.irs_true, [1 3 2]);
+
+results.bias2 = (mean(results.estims,4) - irs_true_reshape).^2;
+
+clear irs_true_reshape
+
+% variance
+
+results.vce = var(results.estims,1,4);
+
+% MSE
+
+results.mse   = 0.5 * results.bias2 + 0.5 * results.vce;
+
 %% GENERATE FIGURES
+
+%----------------------------------------------------------------
+% Inference
+%----------------------------------------------------------------
 
 % some auxiliary variables
 
@@ -56,7 +84,7 @@ left_pos      = [gapsize_edges, gapsize_edges + gapsize + plotwidth];
 % figure name
 
 save_suffix   = '.eps'; % suffix for saved figures
-save_filename = ['figure_oil_', num2str(exp_id)];
+save_filename = ['oil_ci_', num2str(exp_id)];
 
 % plot figures
 
@@ -136,3 +164,77 @@ for d = dgp_sel
 end
 
 cd([path])
+
+%----------------------------------------------------------------
+% Point Estimation
+%----------------------------------------------------------------
+
+% preparations
+
+results.target_irf = dgp.irs_true';
+
+dgp_sel = 1:1:size(results.coverage_prob,1);
+
+the_rms_irf = sqrt(mean(results.target_irf.^2)); % root average squared true IRF across horizons
+the_objects = {'bias2','vce','mse'}; % objects to plot
+the_titles = {'Bias','Standard Deviation','RMSE'};
+
+proc_names = {'VAR', 'LP'};
+
+line_colors = line_colors([1 3],:);
+line_specs  = line_specs([1,3]);
+
+% plot figures
+
+cd([path, '/figures'])
+
+for d = dgp_sel
+
+for j = 1:length(the_objects)
+
+    the_result = squeeze(sqrt(results.(the_objects{j})(d,:,:)))';
+    the_result = the_result./the_rms_irf(1,d);
+
+    the_f = figure;
+
+    pos = get(gca, 'Position');
+    set(gca,'FontSize',20)
+    set(gca,'TickLabelInterpreter','latex')
+    set(gca,'Position', pos)
+    hold on
+    for i_proc = 1:2
+        plot(horzs, the_result(:,i_proc), ...
+            line_specs{i_proc}, ...
+            'Color', line_colors(i_proc,:), ...
+            'LineWidth', 5);
+        hold on
+    end
+
+    xlim([min(horzs) max(horzs)])
+    xlabel('horizon','interpreter','latex');
+    if j ~= 1
+        legend(proc_names, 'Location', 'southeast', ...
+            'NumColumns', 1, 'interpreter', 'latex', 'FontSize', 18);
+    end
+    grid on
+    title(the_titles(j), 'interpreter', 'latex', 'FontSize', 22);
+
+    pos = get(gcf, 'Position');
+    set(gcf, 'Position', [pos(1) pos(2) 1.4*pos(3) 1.2*pos(4)]);
+    set(gcf, 'PaperPositionMode', 'auto');
+
+    % figure name
+
+    if length(dgp_sel) == 1
+        graphic_path = [['oil_', num2str(the_objects{j}) '_' num2str(exp_id)], save_suffix];
+    else
+        graphic_path = [['oil_', num2str(the_objects{j}) '_' num2str(exp_id) '_' num2str(d)], save_suffix];
+    end
+
+    % save
+    exportgraphics(the_f,  graphic_path)
+
+end
+
+end
+cd(path)
