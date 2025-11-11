@@ -27,13 +27,13 @@ Tested in: MATLAB R2025b on Macbook Pro 2023 (M3 Pro)
 **[simulations](simulations):** Simulation study
 - [auxiliary_functions](simulations/auxiliary_functions): Auxiliary simulation-specific routines
 - [data](simulations/data): Data from the oil shock application of [Känzig (2020)](https://www.aeaweb.org/articles?id=10.1257/aer.20190964)
-- [oil](simulations/oil): Maps oil VAR with 18 lags into a local-to-VAR representation ([gen_varma_oil.m](simulations/oil/gen_varma_oil.m)) + run simulations ([simul_oil.m](simulations/oil/simul_oil.m)) + generate figures ([plot_oil.m](simulations/oil/plot_oil.m) and [plot_oil_rmse.m](simulations/oil/plot_oil_rmse.m))
+- [oil](simulations/oil): Maps oil VAR with 18 lags into a local-to-VAR representation ([gen_varma_oil.m](simulations/oil/gen_varma_oil.m)) + run simulations ([simul_oil.m](simulations/oil/simul_oil.m)) + generate figures ([plot_oil.m](simulations/oil/plot_oil.m))
 
 
 ## Detailed replication instructions
 
 - _Figures 4.1-4.3 and A.2-A.3_. First run the file [run_ramey_ses.m](emp_ses/run_ramey_ses.m). Then execute [plot_worstcase.m](analytics/plot_worstcase.m).
-- _Figures 5.1 and D.1_. First run [gen_varma_oil.m](simulations/oil/gen_varma_oil.m). Then execute [simul_oil.m](simulations/oil/simul_oil.m) after setting the option "boot" to "true" for experiments "exp_id=1" and "exp_id=2." The relevant experiment type needs to be selected in the [plot_oil.m](simulations/oil/plot_oil.m) and [plot_oil_rmse.m](simulations/oil/plot_oil_rmse.m).
+- _Figures 5.1 and D.1_. First run [gen_varma_oil.m](simulations/oil/gen_varma_oil.m). Then execute [simul_oil.m](simulations/oil/simul_oil.m) after setting the option "boot" to "true" for experiments "exp_id=1" and "exp_id=2." The relevant experiment type needs to be selected in [plot_oil.m](simulations/oil/plot_oil.m).
 - _Figure A.1_. Run the file [plot_arbias.m](analytics/plot_arbias.m).
 
 
