@@ -40,4 +40,4 @@ Tested in: MATLAB R2025b on Macbook Pro 2023 (M3 Pro)
 ## Acknowledgements
 Our estimation routines build on the replication materials for [Montiel-Olea and Plagborg-Møller (2021)](https://github.com/jm4474/Lag-augmented_LocalProjections).
 
-Plagborg-Møller acknowledges that this material is based upon work supported by the NSF under [Grant #2238049](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2238049), and Wolf does the same for [Grant #2314736](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2314736).
+Plagborg-Møller acknowledges that this material is based upon work supported by the NSF under [Grant #2238049](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2238049) and by the Alfred P. Sloan Foundation, and Wolf does the same for NSF [Grant #2314736](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2314736).
