@@ -23,7 +23,7 @@ Tested in: MATLAB R2025b on Macbook Pro 2023 (M3 Pro)
 - [lp_varithmetic_readme.pdf](documents/lp_varithmetic_readme.pdf): Detailed replication instructions plus supplementary information for replication of our empirical literature surveys
 
 **[lit_lags](lit_lags):** Results for our literature review on lag length selection for VARs
-- [lit_varlags_raw.csv](lit_lags/lit_varlags_raw): Raw, hand-collected data
+- [lit_varlags_raw.csv](lit_lags/lit_varlags_raw.csv): Raw, hand-collected data
 - [lit_varlags_eval.m](lit_lags/lit_varlags_eval.m): Plot summary statistics
 
 **[simulations](simulations):** Simulation study
