@@ -1,6 +1,6 @@
-%% WORST-CASE FIGURES
+%% ANALYTICAL WORST-CASE FIGURES
 % Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 07/18/2024
+% this version: 01/06/2025
 
 %% HOUSEKEEPING
 
@@ -8,8 +8,8 @@ clear
 clc
 close all
 
-addpath('auxiliary_functions')
-addpath(fullfile('..','emp_ses','results'))
+addpath('_aux')
+addpath('_results')
 
 %% SETTINGS
 
@@ -175,210 +175,114 @@ ses_ub_2 = prctile(ses_all_2,90);
 
 %% PLOT RESULTS
 
-mkdir('results');
-
 %----------------------------------------------------------------
 % Worst-Case Coverage of VAR CI
 %----------------------------------------------------------------
 
-for i_figure = 1:2
+figure('Units','inches','Position',plot_pos);
+set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
 
-    figure('Units','inches','Position',plot_pos);
-    set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
-
+hold on
+handle = [];
+for i_M=1:n_M
+    handle_i = plot(se_ratio,wc_cov(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
     hold on
-    handle = [];
-    for i_M=1:n_M
-        handle_i = plot(se_ratio,wc_cov(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
-        hold on
-        handle = [handle handle_i];
-    end
-    if i_figure > 1
-        p = jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
-            settings.colors.lblue,settings.colors.lblue,0,0.5);
-        uistack(p, 'bottom')
-    end
-    the_xlim = [0 1];
-    line(the_xlim,[1 1]*(1-signif),'Color','k','LineStyle','-');
-    xlim(the_xlim);
-    ylim([0 1]);
-    yticks([0:0.2:1])
-    label_axis(true)
-    label_legend(M,'M', handle);
-    print(['results/wc_coverage_' num2str(i_figure)],'-depsc', '-vector');
-
+    handle = [handle handle_i];
 end
+p = jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
+    settings.colors.lblue,settings.colors.lblue,0,0.5);
+uistack(p, 'bottom')
+the_xlim = [0 1];
+line(the_xlim,[1 1]*(1-signif),'Color','k','LineStyle','-');
+xlim(the_xlim);
+ylim([0 1]);
+yticks([0:0.2:1])
+label_axis(true)
+label_legend(M,'M', handle);
+print('_results/figure_41','-depsc', '-vector');
 
 %----------------------------------------------------------------
 % Relative Length of Bias-Aware VAR CI
 %----------------------------------------------------------------
 
-for i_figure = 1:2
-
-    figure('Units','inches','Position',plot_pos);
-    set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
+figure('Units','inches','Position',plot_pos);
+set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
+hold on
+handle = [];
+for i_M=1:n_M
+    handle_i = plot(se_ratio,length_var_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
     hold on
-    handle = [];
-    for i_M=1:n_M
-        handle_i = plot(se_ratio,length_var_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
-        hold on
-        handle = [handle handle_i];
-    end
-    if i_figure > 1
-        p = jbfill([ses_lb_2 ses_ub_2],[0 0],[2 2],...
-            settings.colors.lblue,settings.colors.lblue,0,0.5);
-        uistack(p, 'bottom')
-    end
-    the_xlim = [0 1];
-    line(the_xlim,[1 1],'Color','k','LineStyle','-');
-    xlim(the_xlim);
-    ylim([0 2]);
-    yticks([0:0.5:2])
-    label_axis(true)
-    label_legend(M,'M', handle);
-    print(['results/ba_rellength_' num2str(i_figure)],'-depsc', '-vector');
-
+    handle = [handle handle_i];
 end
+the_xlim = [0 1];
+line(the_xlim,[1 1],'Color','k','LineStyle','-');
+xlim(the_xlim);
+ylim([0 2]);
+yticks([0:0.5:2])
+label_axis(true)
+label_legend(M,'M', handle);
+print('_results/figure_43','-depsc', '-vector');
 
 %----------------------------------------------------------------
 % LP Weight in Optimal Bias-Aware CI
 %----------------------------------------------------------------
 
-for i_figure = 1:2
-
-    figure('Units','inches','Position',plot_pos);
-    set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
+figure('Units','inches','Position',plot_pos);
+set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
+hold on
+handle = [];
+for i_M=1:n_M
+    handle_i = plot(se_ratio,weight_opt_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
     hold on
-    handle = [];
-    for i_M=1:n_M
-        handle_i = plot(se_ratio,weight_opt_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
-        hold on
-        handle = [handle handle_i];
-    end
-    if i_figure > 1
-        p = jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
-            settings.colors.lblue,settings.colors.lblue,0,0.5);
-        hold on
-        uistack(p, 'bottom')
-    end
-    the_xlim = [0 1];
-    xlim(the_xlim);
-    ylim([0 1]);
-    yticks([0:0.2:1])
-    label_axis(true)
-    label_legend(M,'M', handle);
-    print(['results/ba_lpoptweight_' num2str(i_figure)],'-depsc', '-vector');
-
+    handle = [handle handle_i];
 end
+the_xlim = [0 1];
+xlim(the_xlim);
+ylim([0 1]);
+yticks([0:0.2:1])
+label_axis(true)
+label_legend(M,'M', handle);
+print('_results/figure_a2','-depsc', '-vector');
 
 %----------------------------------------------------------------
 % Relative Length of Optimal Bias-Aware CI
 %----------------------------------------------------------------
 
-for i_figure = 1:2
+figure('Units','inches','Position',plot_pos);
+set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
+hold on
+handle = [];
 
-    figure('Units','inches','Position',plot_pos);
-    set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
+for i_M=1:n_M
+    handle_i = plot(se_ratio,length_opt_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
     hold on
-    handle = [];
-
-    for i_M=1:n_M
-        handle_i = plot(se_ratio,length_opt_aware(i_M,:),linestyles{i_M},'Color','k','LineWidth',1);
-        hold on
-        handle = [handle handle_i];
-    end
-    if i_figure > 1
-        p = jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
-            settings.colors.lblue,settings.colors.lblue,0,0.5);
-        uistack(p, 'bottom')
-    end
-    the_xlim = [0 1];
-    xlim(the_xlim);
-    ylim([0 1]);
-    yticks([0:0.2:1])
-    label_axis(true)
-    label_legend(M,'M', handle);
-    print(['results/ba_optrellength_' num2str(i_figure)],'-depsc', '-vector');
-
+    handle = [handle handle_i];
 end
+the_xlim = [0 1];
+xlim(the_xlim);
+ylim([0 1]);
+yticks([0:0.2:1])
+label_axis(true)
+label_legend(M,'M', handle);
+print('_results/figure_a3','-depsc', '-vector');
 
 %----------------------------------------------------------------
 % Worst-Case Joint Probability
 %----------------------------------------------------------------
 
-for i_figure = 1:2
+figure('Units','inches','Position',plot_pos);
+set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
 
-    figure('Units','inches','Position',plot_pos);
-    set(gca,'TickLabelInterpreter','latex', 'Layer', 'top')
-
-    hold on
-    if i_figure > 1
-        p = jbfill([ses_lb_2 ses_ub_2],[0 0],[1 1],...
-            settings.colors.lblue,settings.colors.lblue,0,0.5);
-        uistack(p, 'bottom')
-        hold on
-    end
-    plot(se_ratio,wc_prob,'Color','k','LineWidth',2);
-    the_xlim = [0 1];
-    line(the_xlim,[1 1]*signif,'Color','k','LineStyle',':');
-    hold on
-    xlim(the_xlim);
-    ylim([0 1]);
-    yticks([0:0.2:1])
-    label_axis(true)
-    print(['results/wc_joint_' num2str(i_figure)],'-depsc', '-vector');
-
-end
-
-%----------------------------------------------------------------
-% Worst-Case Coverage of Wald Confidence Ellipsoid
-%----------------------------------------------------------------
-
-n_plot_k = length(plot_ellipse_k);
-
-figure('Units','inches','Position',plot_pos.*[1 1 1.5 1]);
-for i_k=1:n_plot_k
-    subplot(1,n_plot_k,i_k);
-    set(gca,'TickLabelInterpreter','latex')
-    hold on;
-    for i_M=1:n_M
-        plot(se_ratio,wc_prob_wald(i_M,:,plot_ellipse_k(i_k)),linestyles{i_M},'LineWidth',1,'Color','k');
-    end
-    hold off;
-    the_xlim = xlim;
-    line(the_xlim,[1 1]*(1-signif),'Color','k','LineStyle','-'); % mark nominal coverage level on vertical axis
-    xlim(the_xlim);
-    ylim([0 1]);
-    label_axis(false);
-    title(sprintf('%s%d%s','$k=',k(plot_ellipse_k(i_k)),'$'),'Interpreter','Latex','FontSize',14);
-    if i_k==n_plot_k
-        label_legend(M,'M');
-    end
-end
-print('results/wc_coverage_wald_k','-depsc', '-vector');
-
-n_plot_M = length(plot_ellipse_M);
-
-figure('Units','inches','Position',plot_pos.*[1 1 1.5 1]);
-for i_M=1:n_plot_M
-    subplot(1,n_plot_M,i_M);
-    set(gca,'TickLabelInterpreter','latex')
-    hold on;
-    for i_k=1:n_k
-        plot(se_ratio,wc_prob_wald(plot_ellipse_M(i_M),:,i_k),linestyles{i_k},'LineWidth',1,'Color','k');
-    end
-    hold off;
-    the_xlim = xlim;
-    line(the_xlim,[1 1]*(1-signif),'Color','k','LineStyle','-'); % mark nominal coverage level on vertical axis
-    xlim(the_xlim);
-    ylim([0 1]);
-    label_axis(false);
-    title(sprintf('%s%3.2g%s','$M=',M(plot_ellipse_M(i_M)),'$'),'Interpreter','Latex','FontSize',14);
-    if i_M==1
-        label_legend(k,'k');
-    end
-end
-print('results/wc_coverage_wald_M','-depsc', '-vector');
+hold on
+plot(se_ratio,wc_prob,'Color','k','LineWidth',2);
+the_xlim = [0 1];
+line(the_xlim,[1 1]*signif,'Color','k','LineStyle',':');
+hold on
+xlim(the_xlim);
+ylim([0 1]);
+yticks([0:0.2:1])
+label_axis(true)
+print('_results/figure_42','-depsc', '-vector');
 
 %% PLOTTING FUNCTIONS
 

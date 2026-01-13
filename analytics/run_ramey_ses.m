@@ -1,6 +1,6 @@
 %% LP/VAR SEs IN RAMEY (2016)
 % Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 07/18/2024
+% this version: 01/06/2025
 
 %% HOUSEKEEPING
 
@@ -8,18 +8,19 @@ clear
 clc
 close all
 
-addpath('auxiliary_functions')
-addpath(fullfile('..','estimation'))
+addpath('_aux')
+addpath(genpath(fullfile('..','_data')))
+addpath(genpath(fullfile('..','_estim')))
 
 %% ESTIMATION SETTINGS
 
 % shared estimation settings
 
 est.innov_ind = 1;      % shock is ordered first
-est.alpha     = 0.1;
-est.no_const  = false;  % false: Include intercept
+est.alpha     = 0.1;    % significance level
+est.no_const  = false;  % false: include intercept
 est.se_homosk = true;   % true: homoskedastic ses
-est.boot_num  = 2e3;
+est.boot_num  = 2e3;    % number of bootstrap draws
 
 % application-specific estimation settings
 
@@ -41,22 +42,22 @@ numspec = length(specs);
 
 % Gertler-Karadi
 appl(1) = setup_appl('Gertler-Karadi', ...
-                  readtable('data/Monetarydat.xlsx', 'Sheet', 'Monthly'), ...
+                  readtable('Monetarydat.xlsx', 'Sheet', 'Monthly'), ...
                   est, 0:48, 2, @clean_monetary);
 
 % Romer-Romer
 appl(2) = setup_appl('Romer-Romer tax', ...
-                readtable('data/homtaxdat.xlsx', 'Sheet', 'homtaxdat'), ...
+                readtable('homtaxdat.xlsx', 'Sheet', 'homtaxdat'), ...
                 est, 0:20, 4, @clean_tax);
 
 % Ramey military news
 appl(3) = setup_appl('Ramey military news', ...
-                readtable('data/homgovdat.xlsx', 'Sheet', 'govdat'), ...
+                readtable('homgovdat.xlsx', 'Sheet', 'govdat'), ...
                 est, 0:20, 2, @clean_gov);
 
 % FORD TFP
 appl(4) = setup_appl('FORD TFP', ...
-                readtable('data/Technology_data.xlsx', 'Sheet', 'techdat'),...
+                readtable('Technology_data.xlsx', 'Sheet', 'techdat'),...
                 est, 0:20, 2, @clean_tech);
 
 n_appl = length(appl);
@@ -120,5 +121,4 @@ end
 
 %% SAVE RESULTS
 
-mkdir('results');
-save('results/res_application.mat', 'appl', '-v7.3')
+save('_results/res_application.mat', 'appl', '-v7.3')

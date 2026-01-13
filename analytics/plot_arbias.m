@@ -1,6 +1,6 @@
 %% WORST-CASE ALPHA(L), AR(1)
 % Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 07/18/2024
+% this version: 01/06/2025
 
 %% HOUSEKEEPING
 
@@ -118,5 +118,4 @@ end
 pos = get(gcf, 'Position');
 set(gcf, 'Position', [pos(1) pos(2) 2.4*pos(3) pos(4)]);
 set(gcf, 'PaperPositionMode', 'auto');
-mkdir('results');
-print('results/ar_bias','-depsc');
+print('_figures/figure_a1','-depsc');

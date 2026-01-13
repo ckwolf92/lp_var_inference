@@ -1,6 +1,6 @@
 %% SIMULATIONS FOR OIL SHOCK
 % Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 09/08/2025
+% this version: 01/06/2025
 
 %% HOUSEKEEPING
 
@@ -8,14 +8,12 @@ clc
 clear
 close all
 
-warning('off','MATLAB:dispatcher:nameConflict')
+addpath('_aux')
+addpath('_results')
+addpath(genpath(fullfile('..','_data')))
+addpath(genpath(fullfile('..','_estim')))
 
-path = cd;
-
-addpath(genpath('../auxiliary_functions'))
-addpath(genpath('../data'))
-addpath('../../estimation')
-mkdir('results/')
+%% SETTINGS
 
 %----------------------------------------------------------------
 % Experiment and bootstrap settings
@@ -23,8 +21,6 @@ mkdir('results/')
 
 exp_id = 1;  % 1 is fixed p, 2 is AIC p
 boot   = false;
-
-%% SETTINGS
 
 %----------------------------------------------------------------
 % Import DGP
@@ -306,5 +302,5 @@ results.median_length = median(results.lengths,5);
 
 %% SAVE RESULTS
 
-results_filename = ['results/sim_', num2str(exp_id)];
+results_filename = ['_results/sim_', num2str(exp_id)];
 save(strcat(results_filename, '.mat'), 'dgp', 'specs', 'settings', 'results');

@@ -1,6 +1,6 @@
 %% FIGURES FOR OIL SHOCK
 % Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 09/08/2025
+% this version: 01/06/2025
 
 %% HOUSEKEEPING
 
@@ -8,14 +8,10 @@ clc
 clear
 close all
 
-warning('off','MATLAB:dispatcher:nameConflict')
-
-path = cd;
-
-addpath(genpath('../auxiliary_functions'))
-addpath(genpath('../data'))
-addpath('../../estimation')
-addpath('results/')
+addpath('_aux')
+addpath('_results')
+addpath(genpath(fullfile('..','_data')))
+addpath(genpath(fullfile('..','_estim')))
 
 %% GET RESULTS
 
@@ -23,7 +19,7 @@ addpath('results/')
 % Load
 %----------------------------------------------------------------
 
-exp_id = 1; % 1 is fixed p, 2 is AIC p
+exp_id = 2; % 1 is fixed p, 2 is AIC p
 
 load(['sim_', num2str(exp_id)])
 
@@ -81,14 +77,7 @@ gapsize       = 0.1;
 gapsize_edges = (1-2*plotwidth-gapsize)/2;
 left_pos      = [gapsize_edges, gapsize_edges + gapsize + plotwidth];
 
-% figure name
-
-save_suffix   = '.eps'; % suffix for saved figures
-save_filename = ['oil_ci_', num2str(exp_id)];
-
 % plot figures
-
-cd([path, '/figures'])
 
 dgp_sel = 1:1:size(results.coverage_prob,1);
 
@@ -152,18 +141,18 @@ for d = dgp_sel
     set(gcf, 'Position', [pos(1) pos(2) 2*pos(3) pos(4)]);
     set(gcf, 'PaperPositionMode', 'auto');
 
-    if length(dgp_sel) == 1
-        graphic_path = [save_filename, save_suffix];
-    else
-        graphic_path = [[save_filename '_' num2str(d)], save_suffix];
+    % save
+    if exp_id == 1
+       if d == 1
+           print('_figures/figure_51_1','-depsc');
+       else
+           print(['_figures/figure_d1_' num2str(d-1)],'-depsc');
+       end
+    elseif exp_id == 2
+        print('_figures/figure_51_2','-depsc');
     end
 
-    % save
-    exportgraphics(the_f,  graphic_path)
-
 end
-
-cd([path])
 
 %----------------------------------------------------------------
 % Point Estimation
@@ -185,8 +174,6 @@ line_colors = line_colors([1 3],:);
 line_specs  = line_specs([1,3]);
 
 % plot figures
-
-cd([path, '/figures'])
 
 for d = dgp_sel
 
@@ -223,18 +210,13 @@ for j = 1:length(the_objects)
     set(gcf, 'Position', [pos(1) pos(2) 1.4*pos(3) 1.2*pos(4)]);
     set(gcf, 'PaperPositionMode', 'auto');
 
-    % figure name
-
-    if length(dgp_sel) == 1
-        graphic_path = [['oil_', num2str(the_objects{j}) '_' num2str(exp_id)], save_suffix];
-    else
-        graphic_path = [['oil_', num2str(the_objects{j}) '_' num2str(exp_id) '_' num2str(d)], save_suffix];
+    % save
+    if exp_id == 2
+       if j == 3
+           print('_figures/figure_d1_3','-depsc');
+       end
     end
 
-    % save
-    exportgraphics(the_f,  graphic_path)
-
 end
 
 end
-cd(path)

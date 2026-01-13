@@ -1,6 +1,6 @@
 %% GET OIL-SHOCK POPULATION VARMA(p,infty) AS DGP
 % Jose L. Montiel Olea, Mikkel Plagborg-Moller, Eric Qian, and Christian Wolf
-% this version: 09/08/2025
+% this version: 01/06/2025
 
 %% HOUSEKEEPING
 
@@ -8,13 +8,9 @@ clc
 clear
 close all
 
-warning('off','MATLAB:dispatcher:nameConflict')
-
-path = cd;
-
-addpath(genpath('../auxiliary_functions'))
-addpath(genpath('../data'))
-addpath('../../estimation')
+addpath('_aux')
+addpath(genpath(fullfile('..','_data')))
+addpath(genpath(fullfile('..','_estim')))
 
 %% SETTINGS
 
@@ -22,28 +18,13 @@ addpath('../../estimation')
 % Import Data
 %----------------------------------------------------------------
 
-% estimation sample
+load_oil_data
 
-smplStart = '1974M01'; 
-smplEnd   = '2017M12'; 
-
-% identification sample
-
-smplStartProxy = '1974M01';  
-smplEndProxy   = '2017M12';
-
-% data construction
-
-loadOilData;
-
-data_level = [log(POIL)*100-log(CPI/100)*100 log(OILPROD)*100 log(OILSTOCKS)*100 log(WORLDIP)*100 log(IP)*100 log(CPI)*100];
-data_level = data_level(find(strcmp(datesStringRaw,smplStart)):find(strcmp(datesStringRaw,smplEnd)),:);
-
-Y = [proxy, data_level];
+Y = [proxy, data];
 
 data_oil = Y - mean(Y);
 
-clearvars -except data_oil path
+clearvars -except data_oil
 
 %----------------------------------------------------------------
 % Lag Lengths
@@ -117,4 +98,4 @@ dgp_inputs   = dgps;
 dgp_settings = settings;
 clear settings dgps
 
-save oil_dgps
+save('_results/oil_dgps.mat')
